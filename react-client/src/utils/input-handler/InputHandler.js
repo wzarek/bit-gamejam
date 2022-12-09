@@ -1,4 +1,4 @@
-class InputHandler {
+export default class InputHandler {
     #keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft']
     keysPressed = []
 
