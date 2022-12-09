@@ -1,5 +1,5 @@
 import React from 'react'
-import Room from './components/Rooms/Room'
+import Room from './Room'
 
 const Home = () => {
   return (
