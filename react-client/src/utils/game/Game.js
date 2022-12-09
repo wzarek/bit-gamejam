@@ -1,7 +1,10 @@
-class Game {
+import InputHandler from '../input-handler/InputHandler'
+
+export default class Game {
     #height = 500
     #width = 500
     #maxPlayers = 2
+    #gameObjectId = 'game-object'
 
     #inputHandler
 
@@ -9,19 +12,29 @@ class Game {
     #playersToReconnect = []
     #gameState = GameState.WaitingForPlayers
 
-    constructor(width = 500, height = 500, maxPlayers = 2, inputHandler = new InputHandler()) {
+    constructor(width = 500, height = 500, maxPlayers = 2) {
         this.#height = height
         this.#width = width
         this.#maxPlayers = maxPlayers
-        this.#inputHandler = inputHandler
     }
 
-    #startGame() {
-        if (this.#gameState !== GameState.WaitingForPlayers) return
+    startGame() {
+        // if (this.#gameState !== GameState.WaitingForPlayers) return
 
         this.#gameState = GameState.Starting
         // logic of game starting
+        this.#createCanvas()
+        // end of game starting
         this.#gameState = GameState.InProgress
+    }
+
+    #createCanvas() {
+        const gameElement = document.getElementById(this.#gameObjectId)
+        let canvasElement = document.createElement('canvas')
+        canvasElement.width = this.#width
+        canvasElement.height = this.#height
+        canvasElement.classList.add('border-2')
+        gameElement.appendChild(canvasElement)
     }
 
     #pauseGame() {
@@ -46,7 +59,7 @@ class Game {
         if (this.#playersList.some((el) => el === player)) return
 
         this.#playersList.push(player)
-        if (this.#playersList.length === this.#maxPlayers) this.#startGame()
+        if (this.#playersList.length === this.#maxPlayers) this.startGame()
     }
 
     reconnectPlayer(player) {
