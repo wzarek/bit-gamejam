@@ -27,12 +27,18 @@ export default class AudioHandler {
         }
 
         audio.play()
-        for (let i = 0; i < replays; i++) {
+        for (let i = 0; i < replays-1; i++) {
             audio.addEventListener('ended', () => {
                 this.currentTime = 0
                 this.play()
             }, false)
         }
+    }
+
+    playLoop(){
+        let audio = new Audio(this.audioPath)
+        audio.loop = true;
+        audio.play()
     }
 
     stop(){
