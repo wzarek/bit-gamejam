@@ -4,19 +4,37 @@ export default class Player {
     #gameObject
     #assets
     #isCurrentPlayer
+
+    #keys = {
+        up: 'ArrowUp',
+        down: 'ArrowDown',
+        left: 'ArrowLeft',
+        right: 'ArrowRight'
+    }
     
     #x = 0
     #y = 0
-    #width = 50
-    #height = 50
+    #width = 30
+    #height = 30
 
     constructor(game, isCurrentPlayer) {
         this.#gameObject = game
         this.#isCurrentPlayer = isCurrentPlayer
     }
 
-    update() {
-        
+    update(inputKeys) {
+        if (inputKeys.includes(this.#keys.up)) {
+            this.#y--
+        }
+        if (inputKeys.includes(this.#keys.down)) {
+            this.#y++
+        }
+        if (inputKeys.includes(this.#keys.left)) {
+            this.#x--
+        }
+        if (inputKeys.includes(this.#keys.right)) {
+            this.#x++
+        }
     }
 
     render(ctx) {

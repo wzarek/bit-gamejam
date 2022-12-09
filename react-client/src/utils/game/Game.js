@@ -1,8 +1,8 @@
 import InputHandler from '../input-handler/InputHandler'
 
 export default class Game {
-    #height = 500
-    #width = 500
+    #height
+    #width
     #maxPlayers = 2
     #gameObjectId = 'game-object'
 
@@ -15,10 +15,11 @@ export default class Game {
     #canvasContext
     #currentPlayer
 
-    constructor(width = 500, height = 500, maxPlayers = 2) {
+    constructor(width = 900, height = 400, maxPlayers = 2) {
         this.#height = height
         this.#width = width
         this.#maxPlayers = maxPlayers
+        this.#inputHandler = new InputHandler()
     }
 
     startGame() {
@@ -57,7 +58,7 @@ export default class Game {
     updateCurrentPlayer() {
         if (!this.#currentPlayer) return
 
-        this.#currentPlayer.update()
+        this.#currentPlayer.update(this.#inputHandler.keysPressed)
     }
 
     #pauseGame() {
