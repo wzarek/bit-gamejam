@@ -1,7 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
+import { audiotest } from './audio/AudioHandler';
+import { useEffect } from 'react';
+import AudioHandler from './audio/AudioHandler';
+import ambient from './audio/ambient1.mp3';
+import ambient2 from './audio/ambient2.mp3';
 
 function App() {
+  let audio = new AudioHandler([ambient, ambient2])
+  const button = document.getElementById('start-button')
+  document.addEventListener('click', () => {
+    audio.playRandom()
+    console.log('button clicked')
+  })
+
   return (
     <div className="App">
       <header className="App-header">
