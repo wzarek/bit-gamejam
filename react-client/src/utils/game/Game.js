@@ -12,6 +12,9 @@ export default class Game {
     #playersToReconnect = []
     #gameState = GameState.WaitingForPlayers
 
+    #canvasContext
+    #currentPlayer
+
     constructor(width = 500, height = 500, maxPlayers = 2) {
         this.#height = height
         this.#width = width
@@ -24,6 +27,8 @@ export default class Game {
         this.#gameState = GameState.Starting
         // logic of game starting
         this.#createCanvas()
+        this.#drawPlayers()
+        this.#startGameLoop()
         // end of game starting
         this.#gameState = GameState.InProgress
     }
@@ -33,8 +38,29 @@ export default class Game {
         let canvasElement = document.createElement('canvas')
         canvasElement.width = this.#width
         canvasElement.height = this.#height
-        canvasElement.classList.add('border-2')
+        canvasElement.classList.add('border-2', 'mx-auto')
         gameElement.appendChild(canvasElement)
+        this.#canvasContext = canvasElement.getContext('2d')
+    }
+
+    #drawPlayers() {
+        this.#playersList.forEach((player) => {
+            player.render(this.#canvasContext)
+        })
+    }
+
+    #drawCurrentPlayer() {
+        this.#currentPlayer.render(this.#canvasContext)
+    }
+
+    #updateCurrentPlayer() {
+        this.#currentPlayer.update()
+    }
+
+    #startGameLoop() {
+        this.#updateCurrentPlayer()
+        this.#drawCurrentPlayer()
+        requestAnimationFrame(this.#startGameLoop)
     }
 
     #pauseGame() {
@@ -57,6 +83,10 @@ export default class Game {
         if (this.#gameState !== GameState.WaitingForPlayers) return
         if (this.#playersList.length >= this.#maxPlayers) return
         if (this.#playersList.some((el) => el === player)) return
+
+        if (player.isCurrentPlayer) {
+            this.#currentPlayer = player
+        }
 
         this.#playersList.push(player)
         if (this.#playersList.length === this.#maxPlayers) this.startGame()
