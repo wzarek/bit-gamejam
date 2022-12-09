@@ -28,7 +28,6 @@ export default class Game {
         // logic of game starting
         this.#createCanvas()
         this.#drawPlayers()
-        this.#startGameLoop()
         // end of game starting
         this.#gameState = GameState.InProgress
     }
@@ -49,18 +48,16 @@ export default class Game {
         })
     }
 
-    #drawCurrentPlayer() {
+    drawCurrentPlayer() {
+        if (!this.#currentPlayer) return
+
         this.#currentPlayer.render(this.#canvasContext)
     }
 
-    #updateCurrentPlayer() {
-        this.#currentPlayer.update()
-    }
+    updateCurrentPlayer() {
+        if (!this.#currentPlayer) return
 
-    #startGameLoop() {
-        this.#updateCurrentPlayer()
-        this.#drawCurrentPlayer()
-        requestAnimationFrame(this.#startGameLoop)
+        this.#currentPlayer.update()
     }
 
     #pauseGame() {
@@ -113,6 +110,18 @@ export default class Game {
 
         this.#playersList.splice(this.#playersList.indexOf(player), 1)
         this.#pauseGame()
+    }
+
+    get canvasContext() {
+        return this.#canvasContext
+    }
+
+    get width() {
+        return this.#width
+    }
+
+    get height() {
+        return this.#height
     }
 }
 

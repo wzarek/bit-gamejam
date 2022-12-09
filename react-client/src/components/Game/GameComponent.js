@@ -8,6 +8,13 @@ const GameComponent = (props) => {
         let currPlayer = new Player(game, true)
         game.addPlayer(currPlayer)
         game.startGame()
+        const startGameLoop = () => {
+            game.canvasContext.clearRect(0, 0, game.width, game.height)
+            game.updateCurrentPlayer()
+            game.drawCurrentPlayer()
+            requestAnimationFrame(startGameLoop)
+        }
+        startGameLoop()
     }, [])
   return (
     <div id='game-object'>

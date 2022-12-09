@@ -16,7 +16,7 @@ export default class Player {
     }
 
     update() {
-        this.#x++
+        
     }
 
     render(ctx) {
