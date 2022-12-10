@@ -105,10 +105,10 @@ export default class Player {
             this.#speedY = 0
         }
 
-        // if (this.#x < 0) this.#x = 0
-        // if (this.#y < 0) this.#y = 0
-        // if (this.#x > this.#gameObject.width - this.#width) this.#x = this.#gameObject.width - this.#width
-        // if (this.#y > this.#gameObject.height - this.#height) this.#y = this.#gameObject.height - this.#height
+        // if (this.#x - 64 < 0) this.#x = 0
+        // if (this.#y - 64 < 0) this.#y = 0
+        // if (this.#x > this.#gameObject.width + this.#width) this.#x = this.#gameObject.width - this.#width
+        // if (this.#y > this.#gameObject.height + this.#height) this.#y = this.#gameObject.height - this.#height
 
         if (this.#inputTimeout == null && (inputKeys.includes(this.#keys.up) || inputKeys.includes(this.#keys.down) || inputKeys.includes(this.#keys.left) || inputKeys.includes(this.#keys.right))){
             this.#gameObject.socketObject.emit('player-moved', this.#gameObject.roomName, {x: this.#x, y: this.#y})

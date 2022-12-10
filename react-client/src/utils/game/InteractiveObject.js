@@ -10,6 +10,6 @@ export default class InteractiveObject {
     }
 
     canInteracte(socketId) {
-        return socketId === this.#whoCanInteract
+        return (!this.#whoCanInteract || (socketId === this.#whoCanInteract))
     }
 }

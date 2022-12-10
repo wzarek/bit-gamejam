@@ -36,6 +36,6 @@ export const assets = {
         'walk3': walk3
     },
     sfxHumanAttack: {
-        
+
     }
 }

@@ -8,6 +8,8 @@ export default class Game {
     socketObject
     roomName
 
+    objects = []
+
     #height
     #width
     #maxPlayers = 2
@@ -57,6 +59,16 @@ export default class Game {
 
     #renderRoom() {
         let room = new Room('room01')
+
+        for (let i = 0; i < this.#level.objects.length; i++) {
+            let information = this.#level.objects[i].split(' ')
+            switch (information[2]) {
+                case 'L':
+                    this.objects.push(new InteractiveObject(information[2], `${information[0]} ${information[1]}`))
+                    break
+            }
+        }
+
         room.render(this.#roomCanvasContext)
         //this.#roomObjects = room.
     }

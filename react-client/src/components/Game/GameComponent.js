@@ -41,19 +41,21 @@ const GameComponent = (props) => {
       game = new Game(socket, roomName, level)
       let playersIdCopy = [...players]
 
-      let currentPlayer = playersIdCopy.find((player) => player === socket.id)
-      let otherPlayer = playersIdCopy.find((player) => player !== socket.id)
+      let currentPlayer = playersIdCopy.indexOf(socket.id)
+      let otherPlayer = currentPlayer === 0 ? 1 : 0
 
       let playersIdSorted = []
-      if (otherPlayer) playersIdSorted.push(otherPlayer)
-      if (currentPlayer) playersIdSorted.push(currentPlayer)
+      if (otherPlayer !== -1) playersIdSorted.push(playersIdCopy[otherPlayer])
+      if (currentPlayer !== -1) playersIdSorted.push(playersIdCopy[currentPlayer])
+      console.log(currentPlayer, otherPlayer)
 
-      playersIdSorted.forEach((playerId, idx) => {
-        let respawns = level.respawns[idx].split(" ")
+      playersIdSorted.forEach((playerId) => {
         if (playerId === socket.id) {
+          let respawns = level.respawns[currentPlayer].split(" ")
           let currPlayer = new Player(playerId, game, level, assets, true, respawns[0] * 64, respawns[1] *64)
           game.addPlayer(currPlayer)
         } else {
+          let respawns = level.respawns[otherPlayer].split(" ")
           let newPlayer = new Player(playerId, game, level, assets, false, respawns[0] * 64, respawns[1] * 64)
           game.addPlayer(newPlayer)
         }
@@ -77,6 +79,12 @@ const GameComponent = (props) => {
           setShowTooltips(false)
         }, 10000);
       }, introDuration)
+    })
+
+    socket.on('next-level', ({level, roomName}) => {
+      game.destroy()
+      alert('welcome to next lvl')
+      game = new Game(socket, roomName, level)
     })
 
     socket.on('move-player', ({ socketId, position }) => {

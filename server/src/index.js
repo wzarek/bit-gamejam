@@ -146,6 +146,8 @@ io.on("connection", (socket) => {
         io.in(roomName).emit('next-level', room.currentLevel)
     })
 
+    // socket.emit('next-level'
+
     socket.on('disconnect', () => {
         const room = roomsStorage.get(currentRoom)
         if (!room) return
