@@ -1,19 +1,15 @@
-import { roomsGrid } from "./Assets"
-import { assets } from "./Assets"
+import { assets, roomsGrid } from "./Assets"
+import { levels } from "../../media/rooms/rooms.js"
 
 export default class Room {
     #roomID
     #tileSize = 64
     #roomObjects = []
 
-    constructor(roomID){
-        this.#roomID = roomID
-    }
+    render(ctx, roomName){
+        let room = assets.rooms.room01
+        console.log(room.src)
 
-    render(ctx){
-        let room = assets.rooms[this.#roomID]
-
-        console.log(room)
         let img = new Image()
         img.onload = function () {
             ctx.drawImage(img, 0, 0)

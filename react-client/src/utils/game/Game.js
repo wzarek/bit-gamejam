@@ -17,6 +17,7 @@ export default class Game {
     #assets = assets
 
     #inputHandler
+    #audioHandler
 
     #playersList = []
     #playersToReconnect = []
@@ -46,34 +47,27 @@ export default class Game {
         this.#createRoomCanvas()
         this.#createPlayerCanvas()
         this.drawPlayers()
-        this.#startAudio()
         this.#renderRoom()
         // end of game starting
         this.#gameState = GameState.InProgress
     }
 
     #renderRoom() {
-        let room = new Room('room01')
-        room.render(this.#roomCanvasContext)
+        let room = new Room()
+        console.log(this.roomName)
+        switch (this.roomName) {
+            case 'room01':
+                room.render(this.#roomCanvasContext, this.roomName)
+                break;
+            case 'room02':
+                room.render(this.#roomCanvasContext, this.roomName)
+                break;
+            case 'room03':
+                room.render(this.#roomCanvasContext, this.roomName)
+                break;
+        }
+        
         //this.#roomObjects = room.
-    }
-
-    #startAudio() {
-        let audioHandler = new AudioHandler()
-
-        // let button = document.createElement('button')
-        // button.innerHTML = 'Start music'
-        // document.body.appendChild(button)
-        // let audio = new AudioHandler(ambient1)
-        // button.addEventListener('click', () => {   
-        //     audio.play()
-        // })
-        // let button2 = document.createElement('button')
-        // button2.innerHTML = 'Stop audio'
-        // document.body.appendChild(button2)
-        // button2.addEventListener('click', () => {
-        //     audio.stop()
-        // })
     }
 
     #createRoomCanvas() {
@@ -107,7 +101,7 @@ export default class Game {
     updateCurrentPlayer() {
         if (!this.#currentPlayer) return
 
-        this.#currentPlayer.update(this.#inputHandler.keysPressed)
+        this.#currentPlayer.update(this.#inputHandler.keysPressed, this.#playerCanvasContext)
     }
 
     #pauseGame() {

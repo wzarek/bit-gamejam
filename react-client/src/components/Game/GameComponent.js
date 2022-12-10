@@ -76,7 +76,7 @@ const GameComponent = (props) => {
       setTimeout(() => {
         setShowTooltips(false)
       }, 10000);
-    })
+    }, introDuration)
 
     socket.on('move-player', ({ socketId, position }) => {
       let playerToMove = game.getPlayer(socketId)
@@ -93,7 +93,6 @@ const GameComponent = (props) => {
             <Intro />
             : <></>
         }
-        <ToolTips visible={showTooltips} />
       </div>
     </>
   )

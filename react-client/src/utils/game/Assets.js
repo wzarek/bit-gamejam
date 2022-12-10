@@ -12,7 +12,9 @@ import walk1 from '../../media/audio/sfx/walk/walk1.wav'
 import walk2 from '../../media/audio/sfx/walk/walk2.wav'
 import walk3 from '../../media/audio/sfx/walk/walk3.wav'
 
+// ROOMS
 import room01 from '../../media/rooms/room01.png'
+import lever from '../../media/audio/lever.wav'
 
 export const assets = {
     player: {
@@ -21,7 +23,7 @@ export const assets = {
         player3: player3
     },
     rooms: {
-        room01: room01
+        'room01': room01
     },
     ambient: {
         'ambient1': ambient1,
@@ -33,7 +35,5 @@ export const assets = {
         'walk2': walk2,
         'walk3': walk3
     },
-    sfxHumanAttack: {
-        
-    }
+    'lever': lever
 }
