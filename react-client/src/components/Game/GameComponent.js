@@ -43,7 +43,9 @@ const GameComponent = (props) => {
       let currentPlayer = playersIdCopy.find((player) => player === socket.id)
       let otherPlayer = playersIdCopy.find((player) => player !== socket.id)
 
-      let playersIdSorted = [otherPlayer, currentPlayer]
+      let playersIdSorted = []
+      if (otherPlayer) playersIdSorted.push(otherPlayer)
+      if (currentPlayer) playersIdSorted.push(currentPlayer)
 
       playersIdSorted.forEach((playerId) => {
         if (playerId === socket.id) {
