@@ -81,6 +81,12 @@ const GameComponent = (props) => {
       }, introDuration)
     })
 
+    socket.on('next-level', ({level, roomName}) => {
+      game.destroy()
+      alert('welcome to next lvl')
+      game = new Game(socket, roomName, level)
+    })
+
     socket.on('move-player', ({ socketId, position }) => {
       let playerToMove = game.getPlayer(socketId)
       if (!playerToMove) return
