@@ -2,7 +2,7 @@ export default class Player {
     #nick
     #socketId
     #gameObject
-    #assets
+    #asset
     #isCurrentPlayer
 
     #keys = {
@@ -14,15 +14,16 @@ export default class Player {
     
     #x = 0
     #y = 0
-    #width = 30
-    #height = 30
+    #width = 190
+    #height = 160
     #speedX = 0
     #speedY = 0
     #maxSpeed = 5
 
-    constructor(game, isCurrentPlayer) {
+    constructor(game, isCurrentPlayer, assets) {
         this.#gameObject = game
         this.#isCurrentPlayer = isCurrentPlayer
+        this.#asset = assets.player.player1
     }
 
     update(inputKeys) {
@@ -54,7 +55,10 @@ export default class Player {
     }
 
     render(ctx) {
-        ctx.fillRect(this.#x, this.#y, this.#width, this.#height)
+        console.log(this.#asset)
+        let playerImg = new Image(this.#width, this.#height)
+        playerImg.src = this.#asset
+        ctx.drawImage(playerImg, 140, 160, this.#width, this.#height, this.#x, this.#y, this.#width/2, this.#height/2)
     }
 
     get isCurrentPlayer() {

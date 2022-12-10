@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
+import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 
 const GameComponent = (props) => {
     useEffect(() => {
         let game = new Game()
-        let currPlayer = new Player(game, true)
+        let currPlayer = new Player(game, true, assets)
         game.addPlayer(currPlayer)
         game.startGame()
         const startGameLoop = () => {
