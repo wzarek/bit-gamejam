@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&family=Press+Start+2P&display=swap');
+
+* {
+    font-family: 'Open Sans', sans-serif;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.img-hidden {
+    opacity: 0;
+    scale: 0;
+    transition-duration: .25s;
+    transform-origin: 0 0;
+}
+
+.img-shown {
+    opacity: 1;
+    scale: 1;
+}
