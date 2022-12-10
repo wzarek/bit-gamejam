@@ -20,13 +20,18 @@ export default class Player {
     #speedY = 0
     #maxSpeed = 5
 
-    constructor(game, isCurrentPlayer, assets) {
+    constructor(socketId, game, assets, isCurrentPlayer = false, x = 0, y = 0) {
+        this.#socketId = socketId
         this.#gameObject = game
         this.#isCurrentPlayer = isCurrentPlayer
+        this.#x = x
+        this.#y = y
         this.#asset = assets.player.player1
     }
 
     update(inputKeys) {
+        if (!this.#isCurrentPlayer) return
+
         if (inputKeys.includes(this.#keys.left) || inputKeys.includes(this.#keys.right)) {
             this.#x += this.#speedX
             if (inputKeys.includes(this.#keys.left)) {
@@ -52,16 +57,28 @@ export default class Player {
         if (this.#y < 0) this.#y = 0
         if (this.#x > this.#gameObject.width - this.#width) this.#x = this.#gameObject.width - this.#width
         if (this.#y > this.#gameObject.height - this.#height) this.#y = this.#gameObject.height - this.#height
+
+        if (inputKeys.includes(this.#keys.up) || inputKeys.includes(this.#keys.down) || inputKeys.includes(this.#keys.left) || inputKeys.includes(this.#keys.right)){
+            this.#gameObject.socketObject.emit('player-moved', this.#gameObject.roomName, {x: this.#x, y: this.#y})
+        }
     }
 
     render(ctx) {
-        console.log(this.#asset)
         let playerImg = new Image(this.#width, this.#height)
         playerImg.src = this.#asset
         ctx.drawImage(playerImg, 140, 160, this.#width, this.#height, this.#x, this.#y, this.#width/2, this.#height/2)
     }
 
+    movePlayer(position) {
+        this.#x = position.x
+        this.#y = position.y
+    }
+
     get isCurrentPlayer() {
         return this.#isCurrentPlayer
+    }
+
+    get socketId() {
+        return this.#socketId
     }
 }

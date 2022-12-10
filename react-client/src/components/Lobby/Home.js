@@ -69,7 +69,7 @@ const Home = () => {
           <div>
             {
               rooms.length == 0 ?
-                'no rooms availaialbne'
+                'no rooms available'
                 :
                 rooms.map((room) => (
                   <Room key={room.name} name={room.name} />
