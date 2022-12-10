@@ -1,7 +1,10 @@
-class Game {
-    #height = 500
-    #width = 500
+import InputHandler from '../input-handler/InputHandler'
+
+export default class Game {
+    #height
+    #width
     #maxPlayers = 2
+    #gameObjectId = 'game-object'
 
     #inputHandler
 
@@ -9,19 +12,53 @@ class Game {
     #playersToReconnect = []
     #gameState = GameState.WaitingForPlayers
 
-    constructor(width = 500, height = 500, maxPlayers = 2, inputHandler = new InputHandler()) {
+    #canvasContext
+    #currentPlayer
+
+    constructor(width = 900, height = 400, maxPlayers = 2) {
         this.#height = height
         this.#width = width
         this.#maxPlayers = maxPlayers
-        this.#inputHandler = inputHandler
+        this.#inputHandler = new InputHandler()
     }
 
-    #startGame() {
-        if (this.#gameState !== GameState.WaitingForPlayers) return
+    startGame() {
+        // if (this.#gameState !== GameState.WaitingForPlayers) return
 
         this.#gameState = GameState.Starting
         // logic of game starting
+        this.#createCanvas()
+        this.#drawPlayers()
+        // end of game starting
         this.#gameState = GameState.InProgress
+    }
+
+    #createCanvas() {
+        const gameElement = document.getElementById(this.#gameObjectId)
+        let canvasElement = document.createElement('canvas')
+        canvasElement.width = this.#width
+        canvasElement.height = this.#height
+        canvasElement.classList.add('border-2', 'mx-auto')
+        gameElement.appendChild(canvasElement)
+        this.#canvasContext = canvasElement.getContext('2d')
+    }
+
+    #drawPlayers() {
+        this.#playersList.forEach((player) => {
+            player.render(this.#canvasContext)
+        })
+    }
+
+    drawCurrentPlayer() {
+        if (!this.#currentPlayer) return
+
+        this.#currentPlayer.render(this.#canvasContext)
+    }
+
+    updateCurrentPlayer() {
+        if (!this.#currentPlayer) return
+
+        this.#currentPlayer.update(this.#inputHandler.keysPressed)
     }
 
     #pauseGame() {
@@ -45,8 +82,12 @@ class Game {
         if (this.#playersList.length >= this.#maxPlayers) return
         if (this.#playersList.some((el) => el === player)) return
 
+        if (player.isCurrentPlayer) {
+            this.#currentPlayer = player
+        }
+
         this.#playersList.push(player)
-        if (this.#playersList.length === this.#maxPlayers) this.#startGame()
+        if (this.#playersList.length === this.#maxPlayers) this.startGame()
     }
 
     reconnectPlayer(player) {
@@ -70,6 +111,18 @@ class Game {
 
         this.#playersList.splice(this.#playersList.indexOf(player), 1)
         this.#pauseGame()
+    }
+
+    get canvasContext() {
+        return this.#canvasContext
+    }
+
+    get width() {
+        return this.#width
+    }
+
+    get height() {
+        return this.#height
     }
 }
 
