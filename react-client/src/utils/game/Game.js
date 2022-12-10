@@ -71,7 +71,15 @@ export default class Game {
             let distance = Math.sqrt(Math.pow(Math.abs(playerPosition.x - x), 2) + Math.pow(Math.abs(playerPosition.y - y), 2))
 
             if (distance <= 64*10) {
-                alert('can use')
+                let matrixX = Math.floor(x/64)
+                let matrixY = Math.floor(y/64)
+
+                if (this.#level.grid[x][y] == 'W' && this.#currentPlayer.ability == 'wand') {
+
+                }
+                else if (this.#level.grid[x][y] == 'BOX' && this.#currentPlayer.ability == 'hook') {
+                    
+                }
             }
         })
     }

@@ -7,6 +7,8 @@ export default class Player {
     #asset
     #isCurrentPlayer
 
+    #ability
+
     #keys = {
         up: 'ArrowUp',
         down: 'ArrowDown',
@@ -189,5 +191,9 @@ export default class Player {
 
     get getPlayerPosition() {
         return {x: Math.floor(this.#x / 64), y: Math.floor(this.#y / 64)}
+    }
+
+    set ability(ab) {
+        this.#ability = ab
     }
 }
