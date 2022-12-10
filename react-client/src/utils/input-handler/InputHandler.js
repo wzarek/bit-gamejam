@@ -19,9 +19,5 @@ export default class InputHandler {
                 this.keysPressed.splice(this.keysPressed.indexOf(e.key), 1)
             }
         })
-
-        // window.addEventListener("mousemove", (e) => {
-            
-        // })
     }
 }
