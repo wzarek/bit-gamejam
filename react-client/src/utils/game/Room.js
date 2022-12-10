@@ -4,7 +4,6 @@ import { assets } from "./Assets"
 export default class Room {
     #roomID
     #tileSize = 64
-    #roomObjects = []
 
     constructor(roomID){
         this.#roomID = roomID

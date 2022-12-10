@@ -9,6 +9,8 @@ export default class Room {
     #currentLevel = 1
     #maxLevel = 3
 
+    levelObjects = [0, 0, 0]
+
     constructor(name, isPublic) {
         this.#name = name
         this.#isPublic = isPublic
