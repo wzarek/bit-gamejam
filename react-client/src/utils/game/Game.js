@@ -21,8 +21,11 @@ export default class Game {
     #playersToReconnect = []
     #gameState = GameState.WaitingForPlayers
 
-    #canvasContext
+    #playerCanvasContext
+    #roomCanvasContext
     #currentPlayer
+
+    #roomObjects = []
 
     constructor(socketObj, roomName, width = 960, height = 640, maxPlayers = 2) {
         this.socketObject = socketObj
@@ -38,7 +41,8 @@ export default class Game {
 
         this.#gameState = GameState.Starting
         // logic of game starting
-        this.#createCanvas()
+        this.#createRoomCanvas()
+        this.#createPlayerCanvas()
         this.drawPlayers()
         this.#startAudio()
         this.#renderRoom()
@@ -48,7 +52,8 @@ export default class Game {
 
     #renderRoom() {
         let room = new Room('room01')
-        room.render(this.#canvasContext)
+        room.render(this.#roomCanvasContext)
+        //this.#roomObjects = room.
     }
 
     #startAudio() {
@@ -67,19 +72,31 @@ export default class Game {
         })
     }
 
-    #createCanvas() {
+    #createRoomCanvas() {
         const gameElement = document.getElementById(this.#gameObjectId)
         let canvasElement = document.createElement('canvas')
         canvasElement.width = this.#width
         canvasElement.height = this.#height
-        canvasElement.classList.add('border-2', 'mx-auto')
+        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
+        canvasElement.id = 'room-canvas'
         gameElement.appendChild(canvasElement)
-        this.#canvasContext = canvasElement.getContext('2d')
+        this.#roomCanvasContext = canvasElement.getContext('2d')
+    }
+
+    #createPlayerCanvas() {
+        const gameElement = document.getElementById(this.#gameObjectId)
+        let canvasElement = document.createElement('canvas')
+        canvasElement.width = this.#width
+        canvasElement.height = this.#height
+        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
+        canvasElement.id = 'player-canvas'
+        gameElement.appendChild(canvasElement)
+        this.#playerCanvasContext = canvasElement.getContext('2d')
     }
 
     drawPlayers() {
         this.#playersList.forEach((player) => {
-            player.render(this.#canvasContext)
+            player.render(this.#playerCanvasContext)
         })
     }
 
@@ -147,8 +164,12 @@ export default class Game {
         return this.#playersList.find((el) => el.socketId === socketId)
     }
 
-    get canvasContext() {
-        return this.#canvasContext
+    get playerCanvasContext() {
+        return this.#playerCanvasContext
+    }
+
+    get roomCanvasContext() {
+        return this.#roomCanvasContext
     }
 
     get width() {
