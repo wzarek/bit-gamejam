@@ -3,6 +3,7 @@ import { rooms } from "./Assets"
 export default class Room {
     #roomID
     #tileSize = 64
+    #roomObjects = []
 
     constructor(roomID){
         this.#roomID = roomID
@@ -26,7 +27,7 @@ export default class Room {
                 //     default:
                 //         break
                 // }
-                
+                console.log("TEST")
                 if(room[i][j]==='NWALL'){
                     ctx.fillStyle = 'blue'
                     ctx.fillRect(j*this.#tileSize, i*this.#tileSize, this.#tileSize, this.#tileSize)

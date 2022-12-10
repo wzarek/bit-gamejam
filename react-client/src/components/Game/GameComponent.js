@@ -47,7 +47,7 @@ const GameComponent = (props) => {
       console.log(level)
       game.startGame()
       const startGameLoop = () => {
-        game.canvasContext.clearRect(0, 0, game.width, game.height)
+        game.playerCanvasContext.clearRect(0, 0, game.width, game.height)
         game.updateCurrentPlayer()
         game.drawPlayers()
         requestAnimationFrame(startGameLoop)
