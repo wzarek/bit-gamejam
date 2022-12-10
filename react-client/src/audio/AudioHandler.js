@@ -1,8 +1,8 @@
-import ambient1 from './ambient1.mp3'
-import ambient2 from './ambient2.mp3'
-import ambient3 from './ambient3.mp3'
-import ambient4 from './ambient4.mp3'
-import ambient5 from './ambient5.mp3'
+import ambient1 from '../media/audio/ambient1.mp3'
+import ambient2 from '../media/audio/ambient2.mp3'
+import ambient3 from '../media/audio/ambient3.mp3'
+import ambient4 from '../media/audio/ambient4.mp3'
+import ambient5 from '../media/audio/ambient5.mp3'
 
 export default class AudioHandler {
     
@@ -27,12 +27,18 @@ export default class AudioHandler {
         }
 
         audio.play()
-        for (let i = 0; i < replays; i++) {
+        for (let i = 0; i < replays-1; i++) {
             audio.addEventListener('ended', () => {
                 this.currentTime = 0
                 this.play()
             }, false)
         }
+    }
+
+    playLoop(){
+        let audio = new Audio(this.audioPath)
+        audio.loop = true;
+        audio.play()
     }
 
     stop(){

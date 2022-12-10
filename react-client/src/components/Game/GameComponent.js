@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
+import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 
@@ -30,7 +31,7 @@ const GameComponent = (props) => {
 
     socket.on('asda', () => {
       let game = new Game()
-      let currPlayer = new Player(game, true)
+      let currPlayer = new Player(game, true, assets)
       game.addPlayer(currPlayer)
       game.startGame()
       const startGameLoop = () => {
@@ -42,7 +43,6 @@ const GameComponent = (props) => {
       startGameLoop()
     })
   }, [])
-
   return (
     <div id='game-object'>
       
