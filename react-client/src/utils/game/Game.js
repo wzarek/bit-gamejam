@@ -23,6 +23,7 @@ export default class Game {
     #playersToReconnect = []
     #gameState = GameState.WaitingForPlayers
 
+    #playerCanvas
     #playerCanvasContext
     #roomCanvasContext
     #currentPlayer
@@ -48,6 +49,7 @@ export default class Game {
         this.#createPlayerCanvas()
         this.drawPlayers()
         this.#startAudio()
+        this.#setMouseEventListeners()
         this.#renderRoom()
         // end of game starting
         this.#gameState = GameState.InProgress
@@ -57,6 +59,21 @@ export default class Game {
         let room = new Room('room01')
         room.render(this.#roomCanvasContext)
         //this.#roomObjects = room.
+    }
+
+    #setMouseEventListeners() {
+        this.#playerCanvas.addEventListener('click', (e) => {
+            let playerPosition = this.#currentPlayer.getPlayerPosition
+            let rect = e.target.getBoundingClientRect()
+            let x = e.clientX - rect.left
+            let y = e.clientY - rect.top
+
+            let distance = Math.sqrt(Math.pow(Math.abs(playerPosition.x - x), 2) + Math.pow(Math.abs(playerPosition.y - y), 2))
+
+            if (distance <= 64*10) {
+                alert('can use')
+            }
+        })
     }
 
     #startAudio() {
@@ -80,7 +97,7 @@ export default class Game {
         let roomCanvasElement = document.createElement('canvas')
         roomCanvasElement.width = this.#width
         roomCanvasElement.height = this.#height
-        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
+        roomCanvasElement.classList.add('mx-auto', 'absolute', 'top-0')
         roomCanvasElement.id = 'room-canvas'
         gameElement.appendChild(roomCanvasElement)
         this.#roomCanvasContext = roomCanvasElement.getContext('2d')
@@ -91,10 +108,11 @@ export default class Game {
         let canvasElement = document.createElement('canvas')
         canvasElement.width = this.#width
         canvasElement.height = this.#height
-        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
+        canvasElement.classList.add('mx-auto', 'absolute', 'top-0')
         canvasElement.id = 'player-canvas'
         gameElement.appendChild(canvasElement)
         this.#playerCanvasContext = canvasElement.getContext('2d')
+        this.#playerCanvas = canvasElement
     }
 
     drawPlayers() {
