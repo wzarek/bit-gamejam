@@ -6,8 +6,9 @@ import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 import Intro from './Intro'
 import ToolTips from './ToolTips'
+import config from '../../utils/config'
 
-const ip = 'http://172.20.10.7:3000'
+const ip = config.ip
 
 const socket = io(ip, {
   withCredentials: false
