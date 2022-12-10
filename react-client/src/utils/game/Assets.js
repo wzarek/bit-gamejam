@@ -16,6 +16,8 @@ import player3 from '../../media/assets/Player3.png'
 // import floor from '../../media/rooms/f.png'
 
 import room01 from '../../media/rooms/room01.png'
+// import room02 from '../../media/rooms/room02.png'
+// import room03 from '../../media/rooms/room03.png'
 
 export const assets = {
     player: {
@@ -25,5 +27,7 @@ export const assets = {
     },
     rooms: {
         room01: room01
+        // room02: room02,
+        // room03: room03
     }
 }

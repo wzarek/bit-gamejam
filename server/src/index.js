@@ -4,6 +4,13 @@ import http from 'http'
 import { Server } from 'socket.io'
 import Room from './models/Room.js'
 import cors from 'cors'
+import levels from './media/levels.js'
+
+const levelsEnum = {
+    1: 'first',
+    2: 'firstBonus',
+    3: 'second'
+}
 
 
 const app = express()
@@ -100,7 +107,8 @@ io.on("connection", (socket) => {
         room.setReadyPlayer(socket.id)
 
         if (room.isRoomReady) {
-            io.in(room.name).emit('game-ready', { level: room.currentLevel, players: room.players})
+            let level = levels[levelsEnum[room.currentLevel]]
+            io.in(room.name).emit('game-ready', { level: level, players: room.players})
             console.log(`[ INFO ] Game in room ${room.name} is ready to start`)
         }
 

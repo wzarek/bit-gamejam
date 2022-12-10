@@ -34,7 +34,6 @@ const GameComponent = (props) => {
 
     socket.on('game-ready', ({ level, players }) => {
       game = new Game(socket, roomName, level)
-
       let playersIdCopy = [...players]
 
       let currentPlayer = playersIdCopy.find((player) => player === socket.id)
@@ -44,12 +43,13 @@ const GameComponent = (props) => {
       if (otherPlayer) playersIdSorted.push(otherPlayer)
       if (currentPlayer) playersIdSorted.push(currentPlayer)
 
-      playersIdSorted.forEach((playerId) => {
+      playersIdSorted.forEach((playerId, idx) => {
+        let respawns = level.respawns[idx].split(" ")
         if (playerId === socket.id) {
-          let currPlayer = new Player(playerId, game, assets, true, 64, 64)
+          let currPlayer = new Player(playerId, game, level, assets, true, respawns[0] * 64, respawns[1] *64)
           game.addPlayer(currPlayer)
         } else {
-          let newPlayer = new Player(playerId, game, assets, false, 70, 70)
+          let newPlayer = new Player(playerId, game, level, assets, false, respawns[0] * 64, respawns[1] * 64)
           game.addPlayer(newPlayer)
         }
       })

@@ -3,6 +3,7 @@ import AudioHandler from '../../audio/AudioHandler'
 import ambient1 from '../../media/audio/ambient1.mp3'
 import { assets } from './Assets'
 import Room from './Room'
+import InteractiveObject from "./InteractiveObject";
 
 export default class Game {
     socketObject

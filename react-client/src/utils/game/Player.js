@@ -22,9 +22,6 @@ export default class Player {
     #speedY = 0
     #maxSpeed = 64
 
-    #uiX = 0
-    #uiY = 0
-
     #previouslyUsedKeys = {
         'left': false,
         'right': false,
@@ -32,28 +29,20 @@ export default class Player {
         'down': false
     }
 
-    #level = [['#', '#', '#', '#', 'DC', '#', '#', '#', '#', 'DC', '#', '#', '#', '#', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '#', '#', '0', '#', '#', '#', '#', '#', '#', '#', '0', '#', '#', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '#', '#', '#', '#', '0', '#', '#', '#', '0', '#', '#', '#', '#', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '0', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '0', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']]
+    #level
+    #levelGrid
 
     #inputTimeout = null
 
-    constructor(socketId, game, assets, isCurrentPlayer = false, x = 0, y = 0) {
+    constructor(socketId, game, level, assets, isCurrentPlayer = false, x = 0, y = 0) {
         this.#socketId = socketId
         this.#gameObject = game
         this.#isCurrentPlayer = isCurrentPlayer
         this.#x = x
         this.#y = y
-        this.#uiX = x
-        this.#uiY = y
         this.#asset = assets.player.player1
+        this.#level = level
+        this.#levelGrid = level.grid
     }
 
     update(inputKeys) {
@@ -67,13 +56,13 @@ export default class Player {
             if (inputKeys.includes(this.#keys.left)) {
                 currentX = Math.floor(this.#x / 64) - 1
                 currentY = Math.floor(this.#y / 64)
-                if (this.#level[currentY][currentX] !== '#') {
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#x -= this.#maxSpeed
                 }
             } else if (inputKeys.includes(this.#keys.right)) {
                 currentX = Math.floor(this.#x/ 64) + 1
                 currentY = Math.floor(this.#y / 64)
-                if (this.#level[currentY][currentX] !== '#') {
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#x += this.#maxSpeed
                 }
             }
@@ -83,14 +72,14 @@ export default class Player {
             if (inputKeys.includes(this.#keys.up)) {
                 currentY = Math.floor(this.#y/ 64) - 1
                 currentX = Math.floor(this.#x / 64)
-                if (this.#level[currentY][currentX] !== '#') {
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#y -= this.#maxSpeed
                 }
             }
             else if (inputKeys.includes(this.#keys.down)) {
                 currentY = Math.floor(this.#y / 64) + 1
                 currentX = Math.floor(this.#x / 64)
-                if (this.#level[currentY][currentX] !== '#') {
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#y += this.#maxSpeed
                 }
             }
