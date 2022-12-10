@@ -2,10 +2,13 @@ import InputHandler from '../input-handler/InputHandler'
 import AudioHandler from '../../audio/AudioHandler'
 import { assets } from './Assets'
 import Room from './Room'
+import InteractiveObject from "./InteractiveObject";
 
 export default class Game {
     socketObject
     roomName
+
+    objects = {}
 
     #height
     #width
@@ -23,6 +26,7 @@ export default class Game {
     #playersToReconnect = []
     #gameState = GameState.WaitingForPlayers
 
+    #playerCanvas
     #playerCanvasContext
     #roomCanvasContext
     #currentPlayer
@@ -47,27 +51,72 @@ export default class Game {
         this.#createRoomCanvas()
         this.#createPlayerCanvas()
         this.drawPlayers()
+        this.#startAudio()
+        this.#setMouseEventListeners()
         this.#renderRoom()
         // end of game starting
         this.#gameState = GameState.InProgress
     }
 
     #renderRoom() {
-        let room = new Room()
-        console.log(this.roomName)
-        switch (this.roomName) {
-            case 'room01':
-                room.render(this.#roomCanvasContext, this.roomName)
-                break;
-            case 'room02':
-                room.render(this.#roomCanvasContext, this.roomName)
-                break;
-            case 'room03':
-                room.render(this.#roomCanvasContext, this.roomName)
-                break;
+        let room = new Room('room01')
+
+        for (let i = 0; i < this.#level.objects.length; i++) {
+            let information = this.#level.objects[i].split(' ')
+            switch (information[2]) {
+                case 'L':
+                    this.objects[`${information[0]} ${information[1]}`] = new InteractiveObject(information[2], `${information[0]} ${information[1]}`)
+                    break
+                case 'DC':
+                    this.objects[`${information[0]} ${information[1]}`] = new InteractiveObject(information[2], `${information[0]} ${information[1]}`)
+                    break
+            }
+            console.log(this.objects)
         }
-        
+
+        room.render(this.#roomCanvasContext)
         //this.#roomObjects = room.
+    }
+
+    #setMouseEventListeners() {
+        this.#playerCanvas.addEventListener('click', (e) => {
+            let playerPosition = this.#currentPlayer.getPlayerPosition
+            let rect = e.target.getBoundingClientRect()
+            let x = e.clientX - rect.left
+            let y = e.clientY - rect.top
+
+            let distance = Math.sqrt(Math.pow(Math.abs(playerPosition.x - x), 2) + Math.pow(Math.abs(playerPosition.y - y), 2))
+
+            if (distance <= 64*10) {
+                let matrixX = Math.floor(x/64)
+                let matrixY = Math.floor(y/64)
+
+                if (this.#level.grid[x][y] == 'W' && this.#currentPlayer.ability == 'wand') {
+
+                }
+                else if (this.#level.grid[x][y] == 'BOX' && this.#currentPlayer.ability == 'hook') {
+                    
+                }
+            }
+        })
+    }
+
+    #startAudio() {
+        let audioHandler = new AudioHandler()
+
+        // let button = document.createElement('button')
+        // button.innerHTML = 'Start music'
+        // document.body.appendChild(button)
+        // let audio = new AudioHandler(ambient1)
+        // button.addEventListener('click', () => {   
+        //     audio.play()
+        // })
+        // let button2 = document.createElement('button')
+        // button2.innerHTML = 'Stop audio'
+        // document.body.appendChild(button2)
+        // button2.addEventListener('click', () => {
+        //     audio.stop()
+        // })
     }
 
     #createRoomCanvas() {
@@ -75,7 +124,7 @@ export default class Game {
         let roomCanvasElement = document.createElement('canvas')
         roomCanvasElement.width = this.#width
         roomCanvasElement.height = this.#height
-        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
+        roomCanvasElement.classList.add('mx-auto', 'absolute', 'top-0')
         roomCanvasElement.id = 'room-canvas'
         gameElement.appendChild(roomCanvasElement)
         this.#roomCanvasContext = roomCanvasElement.getContext('2d')
@@ -86,10 +135,11 @@ export default class Game {
         let canvasElement = document.createElement('canvas')
         canvasElement.width = this.#width
         canvasElement.height = this.#height
-        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
+        canvasElement.classList.add('mx-auto', 'absolute', 'top-0')
         canvasElement.id = 'player-canvas'
         gameElement.appendChild(canvasElement)
         this.#playerCanvasContext = canvasElement.getContext('2d')
+        this.#playerCanvas = canvasElement
     }
 
     drawPlayers() {
@@ -162,6 +212,16 @@ export default class Game {
         return this.#playersList.find((el) => el.socketId === socketId)
     }
 
+    openDoors(coordinates) {
+        coordinates.forEach((coord) => {
+            this.objects[coord].setType('DO')
+            let coords = coord.split(" ")
+            let coordX = coords[1]
+            let coordY = coords[0]
+            this.#level.grid[coordX][coordY] = "DO"
+        })
+    }
+
     get playerCanvasContext() {
         return this.#playerCanvasContext
     }
@@ -176,6 +236,10 @@ export default class Game {
 
     get height() {
         return this.#height
+    }
+
+    get level() {
+        return this.#level
     }
 }
 

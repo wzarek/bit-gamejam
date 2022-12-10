@@ -45,3 +45,7 @@ body {
     opacity: 1;
     scale: 1;
 }
+
+#player-canvas {
+    cursor: url('./media//assets/key-cursor.png'), auto;
+}

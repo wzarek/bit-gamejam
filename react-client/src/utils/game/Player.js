@@ -7,12 +7,15 @@ export default class Player {
     #asset
     #isCurrentPlayer
 
+    #ability
+
     #keys = {
         up: 'ArrowUp',
         down: 'ArrowDown',
         left: 'ArrowLeft',
         right: 'ArrowRight',
-        space: ' '
+        space: ' ',
+        e: 'e'
     }
     
     #x = 64
@@ -35,41 +38,31 @@ export default class Player {
     #speedY = 0
     #maxSpeed = 64
 
-    #uiX = 0
-    #uiY = 0
-
     #previouslyUsedKeys = {
         'left': false,
         'right': false,
         'up': false,
-        'down': false
+        'down': false,
+        'space': false,
+        'e': false
     }
 
-    #level = [['#', '#', '#', '#', 'DC', '#', '#', '#', '#', 'DC', '#', '#', '#', '#', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '#', '#', '0', '#', '#', '#', '#', '#', '#', '#', '0', '#', '#', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '#', '#', '#', '#', '0', '#', '#', '#', '0', '#', '#', '#', '#', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '0', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '0', '#'],
-        ['#', '0', '0', '0', '0', '0', '0', '#', '0', '0', '0', '0', '0', '0', '#'],
-        ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']]
+    #level
+    #levelGrid
 
     #inputTimeout = null
     #inputKeys
 
     #walkEvent = new Event('walk')
 
-    constructor(socketId, game, assets, isCurrentPlayer = false, x = 0, y = 0) {
+    constructor(socketId, game, level, assets, isCurrentPlayer = false, x = 0, y = 0) {
         this.#socketId = socketId
         this.#gameObject = game
         this.#isCurrentPlayer = isCurrentPlayer
         this.#x = x
         this.#y = y
-
-        this.#uiX = x
-        this.#uiY = y
+        this.#level = level
+        this.#levelGrid = level.grid
         this.#asset = assets.player[isCurrentPlayer ? 'player1' : 'player2']
     }
 
@@ -108,22 +101,13 @@ export default class Player {
             if (inputKeys.includes(this.#keys.left)) {
                 currentX = Math.floor(this.#x / 64) - 1
                 currentY = Math.floor(this.#y / 64)
-                if (this.#level[currentY][currentX] !== '#') {
-                    // for(let i=64; i>=0; i-=16){
-                    //     ctx.drawImage(playerImg, this.#frameX, (this.#hasTorch ? 3 : 4) * this.#spriteHeight, this.#spriteWidth, this.#spriteHeight, i+this.#x, this.#y, this.#width, this.#height)
-                    //     let position = 64%64+1
-                    //     this.#frameX = 140 + (480 * position)
-                    // }
-                    // this.#animFrame++
-                    // await this.animationPlay('left', ctx)
-                    //document.dispatchEvent(this.#walkEvent)
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#x -= this.#maxSpeed
                 }
             } else if (inputKeys.includes(this.#keys.right)) {
                 currentX = Math.floor(this.#x/ 64) + 1
                 currentY = Math.floor(this.#y / 64)
-                if (this.#level[currentY][currentX] !== '#') {
-                    //document.dispatchEvent(this.#walkEvent)
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#x += this.#maxSpeed
                 }
             }
@@ -133,14 +117,14 @@ export default class Player {
             if (inputKeys.includes(this.#keys.up)) {
                 currentY = Math.floor(this.#y/ 64) - 1
                 currentX = Math.floor(this.#x / 64)
-                if (this.#level[currentY][currentX] !== '#') {
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#y -= this.#maxSpeed
                 }
             }
             else if (inputKeys.includes(this.#keys.down)) {
                 currentY = Math.floor(this.#y / 64) + 1
                 currentX = Math.floor(this.#x / 64)
-                if (this.#level[currentY][currentX] !== '#') {
+                if (this.#levelGrid[currentY][currentX] !== '#') {
                     this.#y += this.#maxSpeed
                 }
             }
@@ -152,22 +136,41 @@ export default class Player {
         //       this.#speedY = 0
         // }
 
-        // if (this.#x < 0) this.#x = 0
-        // if (this.#y < 0) this.#y = 0
-        // if (this.#x > this.#gameObject.width - this.#width) this.#x = this.#gameObject.width - this.#width
-        // if (this.#y > this.#gameObject.height - this.#height) this.#y = this.#gameObject.height - this.#height
+        // if (this.#x - 64 < 0) this.#x = 0
+        // if (this.#y - 64 < 0) this.#y = 0
+        // if (this.#x > this.#gameObject.width + this.#width) this.#x = this.#gameObject.width - this.#width
+        // if (this.#y > this.#gameObject.height + this.#height) this.#y = this.#gameObject.height - this.#height
 
         if (this.#inputTimeout == null && (inputKeys.includes(this.#keys.up) || inputKeys.includes(this.#keys.down) || inputKeys.includes(this.#keys.left) || inputKeys.includes(this.#keys.right))){
             this.#gameObject.socketObject.emit('player-moved', this.#gameObject.roomName, {x: this.#x, y: this.#y})
             
-            this.#inputTimeout = setTimeout(() => this.#inputTimeout = null, 50)
-            document.dispatchEvent(this.#walkEvent);
+            this.#inputTimeout = setTimeout(() => this.#inputTimeout = null, 20)
+            this.#inputTimeout = setTimeout(() => this.#inputTimeout = null, 30)
+            document.dispatchEvent(this.#walkEvent)
+
+            let playerPos = this.getPlayerPosition
+            let matrixObj = this.#gameObject.level.grid[playerPos.y][playerPos.x] 
+            if (matrixObj == 'L' || matrixObj == 'DO' ) {
+                matrixObj == 'L' ? this.#showToolTip('Click "e" to use the lever') : this.#showToolTip('Click "e" to enter the door')
+            }
+        }
+
+        if (inputKeys.includes(this.#keys.e) && !this.#previouslyUsedKeys.e){
+            let playerPos = this.getPlayerPosition
+            if (this.#gameObject.level.grid[playerPos.y][playerPos.x] == 'L' || this.#gameObject.level.grid[playerPos.y][playerPos.x] == 'DO' ) {
+                console.log(`${playerPos.y} ${playerPos.x}`)
+                let obj = this.#gameObject.objects[`${playerPos.x} ${playerPos.y}`]
+                console.log(obj)
+                obj?.interact(this.#gameObject.roomName, this.#gameObject.socketObject, this.#socketId)
+            }
         }
 
         this.#previouslyUsedKeys.up = inputKeys.includes(this.#keys.up)
         this.#previouslyUsedKeys.down = inputKeys.includes(this.#keys.down)
         this.#previouslyUsedKeys.left = inputKeys.includes(this.#keys.left)
         this.#previouslyUsedKeys.right = inputKeys.includes(this.#keys.right)
+        this.#previouslyUsedKeys.space = inputKeys.includes(this.#keys.space)
+        this.#previouslyUsedKeys.e = inputKeys.includes(this.#keys.e)
     }
 
     // #areColliding(row, col) {
@@ -238,11 +241,23 @@ export default class Player {
         this.#y = position.y
     }
 
+    #showToolTip(tooltip) {
+        this.#gameObject.socketObject.emit('send-tooltip', tooltip)
+    }
+
     get isCurrentPlayer() {
         return this.#isCurrentPlayer
     }
 
     get socketId() {
         return this.#socketId
+    }
+
+    get getPlayerPosition() {
+        return {x: Math.floor(this.#x / 64), y: Math.floor(this.#y / 64)}
+    }
+
+    set ability(ab) {
+        this.#ability = ab
     }
 }

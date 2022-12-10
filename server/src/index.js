@@ -4,6 +4,13 @@ import http from 'http'
 import { Server } from 'socket.io'
 import Room from './models/Room.js'
 import cors from 'cors'
+import levels from './media/levels.js'
+
+const levelsEnum = {
+    1: 'first',
+    2: 'firstBonus',
+    3: 'second'
+}
 
 
 const app = express()
@@ -100,7 +107,8 @@ io.on("connection", (socket) => {
         room.setReadyPlayer(socket.id)
 
         if (room.isRoomReady) {
-            io.in(room.name).emit('game-ready', { level: room.currentLevel, players: room.players})
+            let level = levels[levelsEnum[room.currentLevel]]
+            io.in(room.name).emit('game-ready', { level: level, players: room.players})
             console.log(`[ INFO ] Game in room ${room.name} is ready to start`)
         }
 
@@ -138,6 +146,34 @@ io.on("connection", (socket) => {
         io.in(roomName).emit('next-level', room.currentLevel)
     })
 
+    // socket.emit('next-level'
+
+    socket.on('send-tooltip', (tooltip) => {
+        socket.emit('show-tooltip', tooltip)
+    })
+
+    socket.on('player-interact', (roomName, socketId, coordinates) => {
+        const room = roomsStorage.get(roomName)
+        if (!room) return
+        console.log(`[ INFO ] Users in room ${roomName} interacted with object`)
+
+        room.levelObjects[room.currentLevel - 1]++
+
+        if (room.levelObjects[room.currentLevel - 1] === 2) {
+            let objects = levels[levelsEnum[room.currentLevel]].objects
+            let doors = []
+            objects.forEach((object) => {
+                let information = object.split(' ')
+                if (information[2] === 'DC') {
+                    doors.push(`${information[0]} ${information[1]}`)
+                }
+            })
+
+            io.to(room.name).emit('can-open-door', doors)
+            console.log(`[ INFO ] Users in room ${room.name} can open doors`)
+        }
+    })
+
     socket.on('disconnect', () => {
         const room = roomsStorage.get(currentRoom)
         if (!room) return
@@ -150,6 +186,7 @@ io.on("connection", (socket) => {
             roomsStorage.delete(currentRoom)
             console.log(`[ INFO ] Room ${currentRoom} was deleted, because was empty`)
         }
+
 
         socket.removeAllListeners()
     })

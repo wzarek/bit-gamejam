@@ -4,7 +4,6 @@ import { levels } from "../../media/rooms/rooms.js"
 export default class Room {
     #roomID
     #tileSize = 64
-    #roomObjects = []
 
     render(ctx, roomName){
         let room = assets.rooms.room01

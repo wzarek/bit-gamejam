@@ -5,6 +5,7 @@ import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 import Intro from './Intro'
+import ToolTips from './ToolTips'
 
 const ip = 'http://172.20.10.7:3000'
 
@@ -16,6 +17,7 @@ const GameComponent = (props) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [showIntro, setShowIntro] = useState(false)
   const [showTooltips, setShowTooltips] = useState(false)
+  const [tooltipMessage, setTooltipMessage] = useState('To play the game use the arrow keys to move, spacebar to damage, e to interact, mouse to use abilities')
   const params = useParams()
   const navigate = useNavigate()
   const roomName = params.name
@@ -38,22 +40,24 @@ const GameComponent = (props) => {
 
     socket.on('game-ready', ({ level, players }) => {
       game = new Game(socket, roomName, level)
-
       let playersIdCopy = [...players]
 
-      let currentPlayer = playersIdCopy.find((player) => player === socket.id)
-      let otherPlayer = playersIdCopy.find((player) => player !== socket.id)
+      let currentPlayer = playersIdCopy.indexOf(socket.id)
+      let otherPlayer = currentPlayer === 0 ? 1 : 0
 
       let playersIdSorted = []
-      if (otherPlayer) playersIdSorted.push(otherPlayer)
-      if (currentPlayer) playersIdSorted.push(currentPlayer)
+      if (otherPlayer !== -1) playersIdSorted.push(playersIdCopy[otherPlayer])
+      if (currentPlayer !== -1) playersIdSorted.push(playersIdCopy[currentPlayer])
+      console.log(currentPlayer, otherPlayer)
 
       playersIdSorted.forEach((playerId) => {
         if (playerId === socket.id) {
-          let currPlayer = new Player(playerId, game, assets, true, 64, 64)
+          let respawns = level.respawns[currentPlayer].split(" ")
+          let currPlayer = new Player(playerId, game, level, assets, true, respawns[0] * 64, respawns[1] *64)
           game.addPlayer(currPlayer)
         } else {
-          let newPlayer = new Player(playerId, game, assets, false, 70, 70)
+          let respawns = level.respawns[otherPlayer].split(" ")
+          let newPlayer = new Player(playerId, game, level, assets, false, respawns[0] * 64, respawns[1] * 64)
           game.addPlayer(newPlayer)
         }
       })
@@ -70,28 +74,51 @@ const GameComponent = (props) => {
           requestAnimationFrame(startGameLoop)
         }
         startGameLoop()
-      }, introDuration)
 
-      setShowTooltips(true)
-      setTimeout(() => {
-        setShowTooltips(false)
-      }, 10000);
-    }, introDuration)
+        setShowTooltips(true)
+        setTimeout(() => {
+          setShowTooltips(false)
+        }, 10000);
+      }, introDuration)
+    })
+
+    socket.on('next-level', ({level, roomName}) => {
+      game.destroy()
+      alert('welcome to next lvl')
+      game = new Game(socket, roomName, level)
+    })
 
     socket.on('move-player', ({ socketId, position }) => {
       let playerToMove = game.getPlayer(socketId)
       if (!playerToMove) return
       playerToMove.movePlayer(position)
     })
+
+    socket.on('show-tooltip', (tooltip) => {
+      setTooltipMessage(tooltip)
+      setShowTooltips(true)
+      setTimeout(() => {
+        setShowTooltips(false)
+      }, 2000);
+    })
+
+    socket.on('can-open-door', (coordinates) => {
+      game.openDoors(coordinates)
+    })
   }, [])
   return (
     <>
       <h1>Room {roomName}</h1>
-      <div id='game-object' className='relative mx-auto w-[960px]'>
+      <div id='game-object' className='relative mx-auto w-[962px] h-[642px] overflow-hidden'>
         {
           showIntro ?
             <Intro />
             : <></>
+        }
+        {
+          showTooltips ?
+          <ToolTips message={tooltipMessage} />
+          : <></>
         }
       </div>
     </>

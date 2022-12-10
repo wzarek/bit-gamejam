@@ -2,10 +2,10 @@ import AudioHandler from "../../audio/AudioHandler"
 import { assets } from "../game/Assets"
 
 export default class InputHandler {
-    #keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', ' ']
+    #keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', ' ', 'e']
     keysPressed = []
 
-    constructor(keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', ' ']) {
+    constructor(keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', ' ', 'e']) {
         this.#keysAvailable = keysAvailable
         this.#setEventListeners()
     }
@@ -33,9 +33,5 @@ export default class InputHandler {
                 this.keysPressed.splice(this.keysPressed.indexOf(e.key), 1)
             }
         })
-
-        // window.addEventListener("mousemove", (e) => {
-            
-        // })
     }
 }
