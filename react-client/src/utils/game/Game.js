@@ -1,6 +1,5 @@
 import InputHandler from '../input-handler/InputHandler'
 import AudioHandler from '../../audio/AudioHandler'
-import ambient1 from '../../media/audio/ambient1.mp3'
 import { assets } from './Assets'
 import Room from './Room'
 
@@ -60,19 +59,21 @@ export default class Game {
     }
 
     #startAudio() {
-        let button = document.createElement('button')
-        button.innerHTML = 'Start music'
-        document.body.appendChild(button)
-        let audio = new AudioHandler(ambient1)
-        button.addEventListener('click', () => {   
-            audio.play()
-        })
-        let button2 = document.createElement('button')
-        button2.innerHTML = 'Stop audio'
-        document.body.appendChild(button2)
-        button2.addEventListener('click', () => {
-            audio.stop()
-        })
+        let audioHandler = new AudioHandler()
+
+        // let button = document.createElement('button')
+        // button.innerHTML = 'Start music'
+        // document.body.appendChild(button)
+        // let audio = new AudioHandler(ambient1)
+        // button.addEventListener('click', () => {   
+        //     audio.play()
+        // })
+        // let button2 = document.createElement('button')
+        // button2.innerHTML = 'Stop audio'
+        // document.body.appendChild(button2)
+        // button2.addEventListener('click', () => {
+        //     audio.stop()
+        // })
     }
 
     #createRoomCanvas() {

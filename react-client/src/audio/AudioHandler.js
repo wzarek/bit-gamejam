@@ -1,18 +1,14 @@
-import ambient1 from '../media/audio/ambient1.mp3'
-import ambient2 from '../media/audio/ambient2.mp3'
-import ambient3 from '../media/audio/ambient3.mp3'
-import ambient4 from '../media/audio/ambient4.mp3'
-import ambient5 from '../media/audio/ambient5.mp3'
+import { assets } from "../utils/game/Assets"
 
 export default class AudioHandler {
     
-    constructor(audioPath){
-        this.audioPath = audioPath
-    }
+    // constructor(audioPath){
+    //     this.audioPath = audioPath
+    // }
 
-    playRandom(){
+    playRandom(audioPath){
         let path = this.audioPath[Math.floor(Math.random()*this.audioPath.length)]
-
+        console.log(path)
         let audio = new Audio(path)
         audio.play()
     }
@@ -46,5 +42,19 @@ export default class AudioHandler {
 
         audio.pause()
         audio.currentTime = 0;
+    }
+
+    #setEventListeners(){
+        document.addEventListener('ambient-start', (e) => {
+            this.playRandom(Object.keys(assets.ambient))
+        }, false)
+
+        document.addEventListener('walk', (e) => {
+            this.playRandom(Object.keys(assets.sfxWalk))
+        }, false)
+
+        document.addEventListener('attack', (e) => {
+            this.play(assets.sfxHumanAttack)
+        }) 
     }
 }
