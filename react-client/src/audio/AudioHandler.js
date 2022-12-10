@@ -2,12 +2,12 @@ import { assets } from "../utils/game/Assets"
 
 export default class AudioHandler {
     
-    // constructor(audioPath){
-    //     this.audioPath = audioPath
-    // }
+    constructor(){
+        this.#setEventListeners()
+    }
 
     playRandom(audioPath){
-        let path = this.audioPath[Math.floor(Math.random()*this.audioPath.length)]
+        let path = audioPath[Math.floor(Math.random()*audioPath.length)]
         console.log(path)
         let audio = new Audio(path)
         audio.play()
@@ -47,14 +47,20 @@ export default class AudioHandler {
     #setEventListeners(){
         document.addEventListener('ambient-start', (e) => {
             this.playRandom(Object.keys(assets.ambient))
+            console.log("playing ambient")
         }, false)
 
         document.addEventListener('walk', (e) => {
             this.playRandom(Object.keys(assets.sfxWalk))
+            console.log("playing walk")
         }, false)
 
         document.addEventListener('attack', (e) => {
             this.play(assets.sfxHumanAttack)
-        }) 
+        }, false) 
+
+        document.addEventListener('intro-done', (e) => {
+            document.dispatchEvent(new Event('ambient-start'))
+        }, false)
     }
 }

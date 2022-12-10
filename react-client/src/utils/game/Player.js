@@ -27,7 +27,7 @@ export default class Player {
     
     #spriteWidth = 190
     #spriteHeight = 160
-    #frameX = 140
+    #frameX = 0
     #frameY = 2
     #staggerFrames = 20
     #animFrame = 0
@@ -66,12 +66,36 @@ export default class Player {
         this.#asset = assets.player[isCurrentPlayer ? 'player1' : 'player2']
     }
 
-    update(inputKeys) {
+    // animationPlay(direction, ctx){
+    //     let playerImg = new Image(this.#width, this.#height)
+    //     playerImg.src = this.#asset
+        
+    //     for(let i=0; i<=64; i++){
+    //         if(direction === 'left'){
+    //             ctx.drawImage(playerImg, this.#frameX, (this.#hasTorch ? 3 : 4) * this.#spriteHeight, this.#spriteWidth, this.#spriteHeight, this.#x-i, this.#y, this.#width, this.#height)
+    //             let position = Math.floor(this.#animFrame/this.#staggerFrames) % 4
+    //             this.#frameX = 140 + (480 * position)
+    //         }
+    //         this.#animFrame++
+    //     }
+        
+    //     //let position = 64%64+1
+        
+
+    //     // ctx.drawImage(playerImg, this.#frameX, (this.#hasTorch ? 3 : 4) * this.#spriteHeight, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
+    //     // let position = Math.floor(this.#animFrame/this.#staggerFrames) % 4
+    //     // this.#frameX = 140 + (480 * position)
+    // }
+
+    update(inputKeys, ctx) {
         if (!this.#isCurrentPlayer) return
         if (this.#inputTimeout) return
 
         let currentX
         let currentY
+
+        let playerImg = new Image(this.#width, this.#height)
+        playerImg.src = this.#asset
 
         if ((inputKeys.includes(this.#keys.left) && !this.#previouslyUsedKeys.left) || (inputKeys.includes(this.#keys.right) && !this.#previouslyUsedKeys.right)) {
             if (inputKeys.includes(this.#keys.left)) {
@@ -104,9 +128,13 @@ export default class Player {
                     this.#y += this.#maxSpeed
                 }
             }
-        }else{
-            this.#speedY = 0
-        }
+        } 
+        // else {
+        //       ctx.drawImage(playerImg, this.#frameX, (this.#hasTorch ? 2 : 1) * this.#spriteHeight, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
+        //       let position = Math.floor(this.#animFrame/this.#staggerFrames) % 2
+        //       this.#frameX = 140 + (480 * position)
+        //       this.#speedY = 0
+        // }
 
         // if (this.#x - 64 < 0) this.#x = 0
         // if (this.#y - 64 < 0) this.#y = 0
@@ -162,6 +190,8 @@ export default class Player {
     render(ctx) {
         let playerImg = new Image(this.#width, this.#height)
         playerImg.src = this.#asset
+        //let playerImg = new Image(this.#width, this.#height)
+        //playerImg.src = this.#asset
 //         console.log(this.#speedX, this.#speedY)
 //         if(this.#speedX == 0 && this.#speedY == 0){
 //             ctx.drawImage(playerImg, this.#frameX, (this.#hasTorch ? 2 : 1) * this.#spriteHeight, this.#spriteWidth, this.#spriteHeight,
@@ -183,8 +213,17 @@ export default class Player {
 //         this.#animFrame++
         
 //         if(this.#isCurrentPlayer){
+        // while(){
+        // ctx.drawImage(playerImg, this.#frameX, (this.#hasTorch ? 2 : 1) * this.#spriteHeight, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
+        // let position = Math.floor(this.#animFrame/this.#staggerFrames) % 2
+        // this.#frameX = 140 + (480 * position)
+        // }  \
+        
+        ctx.drawImage(playerImg, this.#frameX, 5 * this.#spriteHeight, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
+        let position = Math.floor(this.#animFrame/this.#staggerFrames-10) % 5
+        this.#frameX = 140 + (480 * position)
 
-        ctx.drawImage(playerImg, 140, 160, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
+        //ctx.drawImage(playerImg, 140, 160, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
         if (this.#isCurrentPlayer) {
             ctx.beginPath()
             ctx.arc(this.#x + this.#height / 2, this.#y + this.#width / 2, 550 + this.#width, 0, 2 * Math.PI, false)

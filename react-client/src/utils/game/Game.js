@@ -20,6 +20,7 @@ export default class Game {
     #assets = assets
 
     #inputHandler
+    #audioHandler
 
     #playersList = []
     #playersToReconnect = []
@@ -150,7 +151,7 @@ export default class Game {
     updateCurrentPlayer() {
         if (!this.#currentPlayer) return
 
-        this.#currentPlayer.update(this.#inputHandler.keysPressed)
+        this.#currentPlayer.update(this.#inputHandler.keysPressed, this.#playerCanvasContext)
     }
 
     #pauseGame() {
