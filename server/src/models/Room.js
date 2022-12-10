@@ -3,6 +3,7 @@ export default class Room {
     #isPublic = false
     #maxPlayers = 2
     #players = []
+    #playersReady = []
     #isStarted = false
 
     constructor(name, isPublic) {
@@ -12,6 +13,10 @@ export default class Room {
 
     get name() {
         return this.#name
+    }
+
+    get players() {
+        return this.#players
     }
 
     get playersInRoom() {
@@ -30,6 +35,10 @@ export default class Room {
         return this.#isStarted
     }
 
+    get isRoomReady() {
+        return this.#playersReady.length === this.#maxPlayers
+    }
+
     addPlayer(socketId) {
         if (this.#players.length === this.#maxPlayers) return
         this.#players.push(socketId)
@@ -43,5 +52,14 @@ export default class Room {
 
     isInRoom(socketId) {
         return this.#players.some((playerId) => playerId === socketId)
+    }
+
+    setReadyPlayer(socketId) {
+        if (!this.#players.some((playerId) => playerId === socketId)) return
+        this.#playersReady.push(socketId)
+    }
+
+    setStarted() {
+        this.#isStarted = true
     }
 }

@@ -14,7 +14,6 @@ app.use(express.json())
 app.use(cors(config.server.cors))
 
 const roomsStorage = new Map()
-roomsStorage.set('test-room', new Room('test-room', true))
 
 app.get('/rooms', (req, res) =>  {
     res.setHeader('Content-Type', 'application/json')
@@ -33,6 +32,8 @@ app.get('*', (req, res) => {
 })
 
 io.on("connection", (socket) => {
+    let currentRoom = ''
+
     socket.on('create-room', (roomName, isPublic) => {
         if (roomsStorage.has(roomName)) {
             socket.emit('create-room-status', { status: 'ERROR', message: 'Room with that name already exists', name: ''})
@@ -76,9 +77,13 @@ io.on("connection", (socket) => {
             if (prevSocketId) {
                 room.removePlayer(prevSocketId)
                 room.addPlayer(socket.id)
+            } else {
+                room.addPlayer(socket.id)
             }
 
             socket.join(roomName)
+            socket.emit('join-room-status', { status: 'OK', message: 'Joined the room'})
+            currentRoom = roomName
             console.log(`[ INFO ] Socket (${socket.id}) successfully joined room ${roomName}`)
         } else {
             socket.emit('join-room-status', { status: 'ERROR', message: 'User cannot join that room' })
@@ -86,24 +91,42 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on('try-join-room', (roomName, prevSocketId) => {
-        const room = roomsStorage.get(roomName)
+    socket.on('player-ready', (roomName) => {
+        console.log(`[ INFO ] Socket (${socket.id}) is ready to start a game (room: ${roomName})`)
 
+        const room = roomsStorage.get(roomName)
+        if (!room) return
+        room.setReadyPlayer(socket.id)
+
+        if (room.isRoomReady) {
+            io.in(roomName).emit('game-ready', { level: 1, players: room.players})
+            console.log(`[ INFO ] Game in room ${roomName} is ready to start`)
+        }
 
     })
 
-    socket.on('leave-room', (roomName) => {
-        socket.leave(roomName)
-        console.log(`[ INFO ] Socket (${socket.id}) left room ${roomName}`)
-
+    socket.on('player-moved', (roomName, position) => {
         const room = roomsStorage.get(roomName)
+        if (!room) return
+
+        socket.to(roomName).emit('move-player', { socketId: socket.id, position: position })
+        // console.log(`[ INFO ] Socket (${socket.id}) moved`)
+    })
+
+    socket.on('disconnect', () => {
+        const room = roomsStorage.get(currentRoom)
+        if (!room) return
+        console.log(`[ INFO ] Socket (${socket.id}) left room ${room.name}`)
+
         room.removePlayer(socket.id)
+        socket.leave(currentRoom)
 
         if (room.playersInRoom === 0) {
-            roomsStorage.delete(roomName)
-            console.log(`[ INFO ] Room ${roomName} was deleted, because was empty`)
+            roomsStorage.delete(currentRoom)
+            console.log(`[ INFO ] Room ${currentRoom} was deleted, because was empty`)
         }
 
+        socket.removeAllListeners()
     })
 })
 
