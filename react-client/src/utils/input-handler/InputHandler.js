@@ -1,8 +1,8 @@
 export default class InputHandler {
-    #keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft']
+    #keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', ' ']
     keysPressed = []
 
-    constructor(keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft']) {
+    constructor(keysAvailable = ['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft', ' ']) {
         this.#keysAvailable = keysAvailable
         this.#setEventListeners()
     }
