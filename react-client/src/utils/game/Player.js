@@ -76,6 +76,10 @@ export default class Player {
             ctx.beginPath()
             ctx.arc(this.#x + this.#height/2, this.#y + this.#width/2, 550 + this.#width, 0, 2 * Math.PI, false)
             ctx.lineWidth = 1100
+            ctx.shadowColor = '#000'
+            ctx.shadowBlur = 25
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)'
+            ctx.filter = 'drop-shadow(10px)'
             ctx.stroke()
         }
     }
