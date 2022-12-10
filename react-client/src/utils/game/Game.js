@@ -2,6 +2,7 @@ import InputHandler from '../input-handler/InputHandler'
 import AudioHandler from '../../audio/AudioHandler'
 import ambient1 from '../../media/audio/ambient1.mp3'
 import { assets } from './Assets'
+import Room from './Room'
 
 export default class Game {
     #height
@@ -20,7 +21,7 @@ export default class Game {
     #canvasContext
     #currentPlayer
 
-    constructor(width = 900, height = 400, maxPlayers = 2) {
+    constructor(width = 960, height = 640, maxPlayers = 2) {
         this.#height = height
         this.#width = width
         this.#maxPlayers = maxPlayers
@@ -35,8 +36,14 @@ export default class Game {
         this.#createCanvas()
         this.#drawPlayers()
         this.#startAudio()
+        this.#renderRoom()
         // end of game starting
         this.#gameState = GameState.InProgress
+    }
+
+    #renderRoom() {
+        let room = new Room('room01')
+        room.render(this.#canvasContext)
     }
 
     #startAudio() {
