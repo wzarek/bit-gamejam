@@ -81,7 +81,7 @@ export default class Game {
         let roomCanvasElement = document.createElement('canvas')
         roomCanvasElement.width = this.#width
         roomCanvasElement.height = this.#height
-        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
+        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
         roomCanvasElement.id = 'room-canvas'
         gameElement.appendChild(roomCanvasElement)
         this.#roomCanvasContext = roomCanvasElement.getContext('2d')
@@ -92,7 +92,7 @@ export default class Game {
         let canvasElement = document.createElement('canvas')
         canvasElement.width = this.#width
         canvasElement.height = this.#height
-        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
+        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
         canvasElement.id = 'player-canvas'
         gameElement.appendChild(canvasElement)
         this.#playerCanvasContext = canvasElement.getContext('2d')
@@ -111,13 +111,13 @@ export default class Game {
     }
 
     #pauseGame() {
-        if (this.#gameState != GameState.InProgress || this.#gameState != GameState.WaitingForReconnection) return
+        if (this.#gameState !== GameState.InProgress || this.#gameState !== GameState.WaitingForReconnection) return
 
         this.#gameState = GameState.Paused
     }
 
     #resumeGame() {
-        if (this.#gameState != GameState.Paused) return
+        if (this.#gameState !== GameState.Paused) return
 
         this.#gameState = GameState.InProgress
     }

@@ -12,7 +12,6 @@ import walk1 from '../../media/audio/sfx/walk/walk1.wav'
 import walk2 from '../../media/audio/sfx/walk/walk2.wav'
 import walk3 from '../../media/audio/sfx/walk/walk3.wav'
 
-import { roomg01 } from '../../media/rooms/room01.js'
 import room01 from '../../media/rooms/room01.png'
 
 export const assets = {
@@ -37,8 +36,4 @@ export const assets = {
     sfxHumanAttack: {
         
     }
-}
-
-export const roomsGrid = {
-    roomg01: roomg01
 }

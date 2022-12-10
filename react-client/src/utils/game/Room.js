@@ -16,7 +16,7 @@ export default class Room {
         console.log(room)
         let img = new Image()
         img.onload = function () {
-            ctx.drawImage(img, 0, 0, 960, 640)
+            ctx.drawImage(img, 0, 0)
         }
         img.src = room
     }
