@@ -5,6 +5,7 @@ import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 import Intro from './Intro'
+import ToolTips from './ToolTips'
 
 const ip = 'http://172.20.10.7:3000'
 
@@ -72,12 +73,12 @@ const GameComponent = (props) => {
           requestAnimationFrame(startGameLoop)
         }
         startGameLoop()
-      }, introDuration)
 
-      setShowTooltips(true)
-      setTimeout(() => {
-        setShowTooltips(false)
-      }, 10000);
+        setShowTooltips(true)
+        setTimeout(() => {
+          setShowTooltips(false)
+        }, 10000);
+      }, introDuration)
     })
 
     socket.on('move-player', ({ socketId, position }) => {
@@ -89,11 +90,16 @@ const GameComponent = (props) => {
   return (
     <>
       <h1>Room {roomName}</h1>
-      <div id='game-object' className='relative mx-auto w-[960px]'>
+      <div id='game-object' className='relative mx-auto w-[962px] h-[642px] overflow-hidden'>
         {
           showIntro ?
             <Intro />
             : <></>
+        }
+        {
+          showTooltips ?
+          <ToolTips message='To play the game use the arrow keys to move, spacebar to damage, e to interact, mouse to use abilities' />
+          : <></>
         }
       </div>
     </>

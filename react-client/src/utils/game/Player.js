@@ -186,4 +186,8 @@ export default class Player {
     get socketId() {
         return this.#socketId
     }
+
+    get getPlayerPosition() {
+        return {x: Math.floor(this.#x / 64), y: Math.floor(this.#y / 64)}
+    }
 }
