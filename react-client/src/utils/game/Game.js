@@ -13,6 +13,8 @@ export default class Game {
     #maxPlayers = 2
     #gameObjectId = 'game-object'
 
+    #level
+
     #assets = assets
 
     #inputHandler
@@ -27,9 +29,10 @@ export default class Game {
 
     #roomObjects = []
 
-    constructor(socketObj, roomName, width = 960, height = 640, maxPlayers = 2) {
+    constructor(socketObj, roomName, level, width = 960, height = 640, maxPlayers = 2) {
         this.socketObject = socketObj
         this.roomName = roomName
+        this.#level = level
         this.#height = height
         this.#width = width
         this.#maxPlayers = maxPlayers

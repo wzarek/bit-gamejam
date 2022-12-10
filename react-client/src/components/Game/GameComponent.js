@@ -24,7 +24,7 @@ const GameComponent = (props) => {
   useEffect(() => {
     socket.emit('join-room', roomName, prevSocketId)
     socket.on('join-room-status', ({ status, message }) => {
-      if (status == 'ERROR') {
+      if (status === 'ERROR') {
         alert(message)
         navigate('/')
       } else {
@@ -33,10 +33,17 @@ const GameComponent = (props) => {
     })
 
     socket.on('game-ready', ({ level, players }) => {
-      game = new Game(socket, roomName)
+      game = new Game(socket, roomName, level)
 
-      players.forEach((playerId) => {
-        if (playerId == socket.id) {
+      let playersIdCopy = [...players]
+
+      let currentPlayer = playersIdCopy.find((player) => player === socket.id)
+      let otherPlayer = playersIdCopy.find((player) => player !== socket.id)
+
+      let playersIdSorted = [otherPlayer, currentPlayer]
+
+      playersIdSorted.forEach((playerId) => {
+        if (playerId === socket.id) {
           let currPlayer = new Player(playerId, game, assets, true, 100, 100)
           game.addPlayer(currPlayer)
         } else {
@@ -44,7 +51,7 @@ const GameComponent = (props) => {
           game.addPlayer(newPlayer)
         }
       })
-      console.log(level)
+
       game.startGame()
       const startGameLoop = () => {
         game.playerCanvasContext.clearRect(0, 0, game.width, game.height)
