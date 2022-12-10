@@ -17,6 +17,7 @@ const GameComponent = (props) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [showIntro, setShowIntro] = useState(false)
   const [showTooltips, setShowTooltips] = useState(false)
+  const [tooltipMessage, setTooltipMessage] = useState('To play the game use the arrow keys to move, spacebar to damage, e to interact, mouse to use abilities')
   const params = useParams()
   const navigate = useNavigate()
   const roomName = params.name
@@ -92,6 +93,18 @@ const GameComponent = (props) => {
       if (!playerToMove) return
       playerToMove.movePlayer(position)
     })
+
+    socket.on('show-tooltip', (tooltip) => {
+      setTooltipMessage(tooltip)
+      setShowTooltips(true)
+      setTimeout(() => {
+        setShowTooltips(false)
+      }, 2000);
+    })
+
+    socket.on('can-open-door', (coordinates) => {
+      game.openDoors(coordinates)
+    })
   }, [])
   return (
     <>
@@ -104,7 +117,7 @@ const GameComponent = (props) => {
         }
         {
           showTooltips ?
-          <ToolTips message='To play the game use the arrow keys to move, spacebar to damage, e to interact, mouse to use abilities' />
+          <ToolTips message={tooltipMessage} />
           : <></>
         }
       </div>

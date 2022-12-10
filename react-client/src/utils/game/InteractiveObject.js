@@ -9,7 +9,16 @@ export default class InteractiveObject {
         this.#whoCanInteract = whoCanInteract
     }
 
-    canInteracte(socketId) {
+    canInteract(socketId) {
         return (!this.#whoCanInteract || (socketId === this.#whoCanInteract))
+    }
+
+    interact(roomName, socketObj, socketId) {
+        if (!this.canInteract(socketId)) return
+        socketObj.emit('player-interact', roomName, socketId, this.#coordinates)
+    }
+
+    setType(type) {
+        this.#type = type
     }
 }
