@@ -14,8 +14,10 @@ export default class Player {
     
     #x = 0
     #y = 0
-    #width = 190
-    #height = 160
+    #width = 64
+    #height = 64
+    #spriteWidth = 190
+    #spriteHeight = 160
     #speedX = 0
     #speedY = 0
     #maxSpeed = 5
@@ -66,7 +68,8 @@ export default class Player {
     render(ctx) {
         let playerImg = new Image(this.#width, this.#height)
         playerImg.src = this.#asset
-        ctx.drawImage(playerImg, 140, 160, this.#width, this.#height, this.#x, this.#y, this.#width/2, this.#height/2)
+        ctx.drawImage(playerImg, 140, 160, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
+        ctx.strokeRect(this.#x, this.#y, this.#width, this.#height)
     }
 
     movePlayer(position) {
