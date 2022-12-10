@@ -5,6 +5,9 @@ import { assets } from './Assets'
 import Room from './Room'
 
 export default class Game {
+    socketObject
+    roomName
+
     #height
     #width
     #maxPlayers = 2
@@ -21,7 +24,9 @@ export default class Game {
     #canvasContext
     #currentPlayer
 
-    constructor(width = 960, height = 640, maxPlayers = 2) {
+    constructor(socketObj, roomName, width = 960, height = 640, maxPlayers = 2) {
+        this.socketObject = socketObj
+        this.roomName = roomName
         this.#height = height
         this.#width = width
         this.#maxPlayers = maxPlayers
@@ -29,12 +34,12 @@ export default class Game {
     }
 
     startGame() {
-        // if (this.#gameState !== GameState.WaitingForPlayers) return
+        if (this.#gameState !== GameState.WaitingForPlayers) return
 
         this.#gameState = GameState.Starting
         // logic of game starting
         this.#createCanvas()
-        this.#drawPlayers()
+        this.drawPlayers()
         this.#startAudio()
         this.#renderRoom()
         // end of game starting
@@ -72,16 +77,10 @@ export default class Game {
         this.#canvasContext = canvasElement.getContext('2d')
     }
 
-    #drawPlayers() {
+    drawPlayers() {
         this.#playersList.forEach((player) => {
-            player.render(this.#canvasContext)
+            player.render()
         })
-    }
-
-    drawCurrentPlayer() {
-        if (!this.#currentPlayer) return
-
-        this.#currentPlayer.render(this.#canvasContext)
     }
 
     updateCurrentPlayer() {
@@ -116,7 +115,7 @@ export default class Game {
         }
 
         this.#playersList.push(player)
-        if (this.#playersList.length === this.#maxPlayers) this.startGame()
+        //if (this.#playersList.length === this.#maxPlayers) this.startGame()
     }
 
     reconnectPlayer(player) {
@@ -140,6 +139,12 @@ export default class Game {
 
         this.#playersList.splice(this.#playersList.indexOf(player), 1)
         this.#pauseGame()
+    }
+
+    getPlayer(socketId) {
+        if (!this.#playersList.some((el) => el.socketId === socketId)) return null
+
+        return this.#playersList.find((el) => el.socketId === socketId)
     }
 
     get canvasContext() {

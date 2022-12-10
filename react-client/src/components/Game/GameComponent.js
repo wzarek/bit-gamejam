@@ -15,35 +15,59 @@ const GameComponent = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const params = useParams()
   const navigate = useNavigate()
+  const roomName = params.name
 
   const prevSocketId = searchParams.get('socketId') ?? ''
-  
+
+  let game
+
   useEffect(() => {
-    // socket.emit('try-join-room', params.name, prevSocketId)
-    // socket.on('try-join-room-status', ({status, message}) => {
-    //   if (status == 'ERROR') {
-    //     alert(message)
-    //     navigate('/')
-    //   } else {
-    //     socket.emit('player-ready')
-    //   }
-    // })
-    let game = new Game()
-    let currPlayer = new Player(game, true, assets)
-    game.addPlayer(currPlayer)
-    game.startGame()
-    const startGameLoop = () => {
-        // game.canvasContext.clearRect(0, 0, game.width, game.height)
+    socket.emit('join-room', roomName, prevSocketId)
+    socket.on('join-room-status', ({ status, message }) => {
+      if (status == 'ERROR') {
+        alert(message)
+        navigate('/')
+      } else {
+        socket.emit('player-ready', roomName)
+      }
+    })
+
+    socket.on('game-ready', ({ level, players }) => {
+      game = new Game(socket, roomName)
+
+      players.forEach((playerId) => {
+        if (playerId == socket.id) {
+          let currPlayer = new Player(playerId, game, assets, true, 100, 100)
+          game.addPlayer(currPlayer)
+        } else {
+          let newPlayer = new Player(playerId, game, assets, false, 70, 70)
+          game.addPlayer(newPlayer)
+        }
+      })
+      console.log(level)
+      game.startGame()
+      const startGameLoop = () => {
+        game.canvasContext.clearRect(0, 0, game.width, game.height)
         game.updateCurrentPlayer()
-        game.drawCurrentPlayer()
+        game.drawPlayers()
         requestAnimationFrame(startGameLoop)
-    }
-    startGameLoop()
+      }
+      startGameLoop()
+    })
+
+    socket.on('move-player', ({ socketId, position }) => {
+      let playerToMove = game.getPlayer(socketId)
+      if (!playerToMove) return
+      playerToMove.movePlayer(position)
+    })
   }, [])
   return (
-    <div id='game-object'>
-      
-    </div>
+    <>
+      <h1>Room {roomName}</h1>
+      <div id='game-object'>
+
+      </div>
+    </>
   )
 }
 
