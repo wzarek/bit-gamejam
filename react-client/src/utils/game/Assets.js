@@ -2,21 +2,19 @@ import player1 from '../../media/assets/Player.png'
 import player2 from '../../media/assets/Player2.png'
 import player3 from '../../media/assets/Player3.png'
 
-// import nwall from '../../media/rooms/wn.png'
-// import newall from '../../media/rooms/wne.png'
-// import nwwall from '../../media/rooms/wnw.png'
-// import swall from '../../media/rooms/ws.png'
-// import sewall from '../../media/rooms/wsea.png'
-// import sewallb from '../../media/rooms/wseb.png'
-// import swwall from '../../media/rooms/wswa.png'
-// import wwall from '../../media/rooms/ww.png'
-// import ewall from '../../media/rooms/we.png'
-// import cwall from '../../media/rooms/wc.png'
+import ambient1 from '../../media/audio/ambient/ambient1.mp3'
+import ambient2 from '../../media/audio/ambient/ambient2.mp3'
+import ambient3 from '../../media/audio/ambient/ambient3.mp3'
+import ambient4 from '../../media/audio/ambient/ambient4.mp3'
+import ambient5 from '../../media/audio/ambient/ambient5.mp3'
 
-// import floor from '../../media/rooms/f.png'
+import walk1 from '../../media/audio/sfx/walk/walk1.wav'
+import walk2 from '../../media/audio/sfx/walk/walk2.wav'
+import walk3 from '../../media/audio/sfx/walk/walk3.wav'
 
-import { roomg01 } from '../../media/rooms/room01.js'
 import room01 from '../../media/rooms/room01.png'
+// import room02 from '../../media/rooms/room02.png'
+// import room03 from '../../media/rooms/room03.png'
 
 export const assets = {
     player: {
@@ -26,9 +24,18 @@ export const assets = {
     },
     rooms: {
         room01: room01
+    },
+    ambient: {
+        'ambient1': ambient1,
+        'ambient2': ambient2,
+        'ambient3': ambient3
+    },
+    sfxWalk: {
+        'walk1': walk1,
+        'walk2': walk2,
+        'walk3': walk3
+    },
+    sfxHumanAttack: {
+        
     }
-}
-
-export const roomsGrid = {
-    roomg01: roomg01
 }

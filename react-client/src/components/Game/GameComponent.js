@@ -5,6 +5,7 @@ import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 import Intro from './Intro'
+import ToolTips from './ToolTips'
 
 const ip = 'http://172.20.10.7:3000'
 
@@ -15,6 +16,7 @@ const socket = io(ip, {
 const GameComponent = (props) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [showIntro, setShowIntro] = useState(false)
+  const [showTooltips, setShowTooltips] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const roomName = params.name
@@ -37,7 +39,6 @@ const GameComponent = (props) => {
 
     socket.on('game-ready', ({ level, players }) => {
       game = new Game(socket, roomName, level)
-
       let playersIdCopy = [...players]
 
       let currentPlayer = playersIdCopy.find((player) => player === socket.id)
@@ -47,12 +48,13 @@ const GameComponent = (props) => {
       if (otherPlayer) playersIdSorted.push(otherPlayer)
       if (currentPlayer) playersIdSorted.push(currentPlayer)
 
-      playersIdSorted.forEach((playerId) => {
+      playersIdSorted.forEach((playerId, idx) => {
+        let respawns = level.respawns[idx].split(" ")
         if (playerId === socket.id) {
-          let currPlayer = new Player(playerId, game, assets, true, 100, 100)
+          let currPlayer = new Player(playerId, game, level, assets, true, respawns[0] * 64, respawns[1] *64)
           game.addPlayer(currPlayer)
         } else {
-          let newPlayer = new Player(playerId, game, assets, false, 70, 70)
+          let newPlayer = new Player(playerId, game, level, assets, false, respawns[0] * 64, respawns[1] * 64)
           game.addPlayer(newPlayer)
         }
       })
@@ -69,7 +71,12 @@ const GameComponent = (props) => {
           requestAnimationFrame(startGameLoop)
         }
         startGameLoop()
-      }, introDuration);
+
+        setShowTooltips(true)
+        setTimeout(() => {
+          setShowTooltips(false)
+        }, 10000);
+      }, introDuration)
     })
 
     socket.on('move-player', ({ socketId, position }) => {
@@ -81,11 +88,16 @@ const GameComponent = (props) => {
   return (
     <>
       <h1>Room {roomName}</h1>
-      <div id='game-object' className='relative mx-auto w-[960px]'>
+      <div id='game-object' className='relative mx-auto w-[962px] h-[642px] overflow-hidden'>
         {
           showIntro ?
             <Intro />
             : <></>
+        }
+        {
+          showTooltips ?
+          <ToolTips message='To play the game use the arrow keys to move, spacebar to damage, e to interact, mouse to use abilities' />
+          : <></>
         }
       </div>
     </>

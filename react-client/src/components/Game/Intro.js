@@ -8,7 +8,6 @@ const Intro = () => {
 
     return (
         <div className='absolute top-0 h-[640px] w-[960px] flex flex-col justify-center items-center bg-black text-white text-lg'>
-            {/* <h2>It's dangerous to go alone...</h2> */}
             <Typewriter
                 onInit={(typewriter) => {
                     typewriter.changeDelay(40).changeDeleteSpeed(3)
@@ -17,6 +16,7 @@ const Intro = () => {
                         .deleteAll()
                         .pauseFor(200)
                         .typeString("Take this!")
+                        .pauseFor(200)
                         .callFunction(() => {
                             let img = imgRef.current
                             img.src = torch
@@ -30,6 +30,7 @@ const Intro = () => {
                         .deleteAll()
                         .pauseFor(200)
                         .typeString("or them...")
+                        .pauseFor(200)
                         .callFunction(() => {
                             let img = imgRef.current
                             img.src = player2
