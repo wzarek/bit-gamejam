@@ -49,7 +49,7 @@ const GameComponent = (props) => {
 
       playersIdSorted.forEach((playerId) => {
         if (playerId === socket.id) {
-          let currPlayer = new Player(playerId, game, assets, true, 100, 100)
+          let currPlayer = new Player(playerId, game, assets, true, 64, 64)
           game.addPlayer(currPlayer)
         } else {
           let newPlayer = new Player(playerId, game, assets, false, 70, 70)
