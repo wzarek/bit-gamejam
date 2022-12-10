@@ -72,7 +72,12 @@ export default class Player {
         let playerImg = new Image(this.#width, this.#height)
         playerImg.src = this.#asset
         ctx.drawImage(playerImg, 140, 160, this.#spriteWidth, this.#spriteHeight, this.#x, this.#y, this.#width, this.#height)
-        ctx.strokeRect(this.#x, this.#y, this.#width, this.#height)
+        ctx.beginPath()
+        ctx.arc(this.#x + this.#height/2, this.#y + this.#width/2, 550 + this.#width, 0, 2 * Math.PI, false)
+        ctx.lineWidth = 1100
+        ctx.stroke()
+        //ctx.lineJoin = 'round'
+        //ctx.strokeRect(this.#x - 490, this.#y - 490, 980 + this.#width, 980 + this.#height)
     }
 
     movePlayer(position) {
