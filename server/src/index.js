@@ -92,17 +92,25 @@ io.on("connection", (socket) => {
     })
 
     socket.on('player-ready', (roomName) => {
-        console.log(`[ INFO ] Socket (${socket.id}) is ready to start a game (room: ${roomName})`)
-
         const room = roomsStorage.get(roomName)
         if (!room) return
+
+        console.log(`[ INFO ] Socket (${socket.id}) is ready to start a game (room: ${room.name}, level: ${room.currentLevel})`)
+
         room.setReadyPlayer(socket.id)
 
         if (room.isRoomReady) {
-            io.in(roomName).emit('game-ready', { level: 1, players: room.players})
-            console.log(`[ INFO ] Game in room ${roomName} is ready to start`)
+            io.in(room.name).emit('game-ready', { level: room.currentLevel, players: room.players})
+            console.log(`[ INFO ] Game in room ${room.name} is ready to start`)
         }
 
+    })
+
+    socket.on('game-ready', (roomName) => {
+        const room = roomsStorage.get(roomName)
+        if (!room) return
+        room.setStarted()
+        console.log(`[ INFO ] Game in room ${room.name} started`)
     })
 
     socket.on('player-moved', (roomName, position) => {
@@ -111,6 +119,23 @@ io.on("connection", (socket) => {
 
         socket.to(roomName).emit('move-player', { socketId: socket.id, position: position })
         // console.log(`[ INFO ] Socket (${socket.id}) moved`)
+    })
+
+    socket.on('finish-level', (roomName) => {
+        const room = roomsStorage.get(roomName)
+        if (!room) return
+
+        console.log(`[ INFO ] Level ${room.currentLevel} for room ${room.name} was finished`)
+        if (room.currentLevel === room.maxLevel) {
+            io.in(roomName).emit('game-finish')
+            roomsStorage.delete(roomName)
+            console.log(`[ INFO ] Game in ${room.name} was finished`)
+
+            return
+        }
+
+        room.updateLevel()
+        io.in(roomName).emit('next-level', room.currentLevel)
     })
 
     socket.on('disconnect', () => {

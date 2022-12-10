@@ -5,6 +5,8 @@ export default class Room {
     #players = []
     #playersReady = []
     #isStarted = false
+    #currentLevel = 1
+    #maxLevel = 3
 
     constructor(name, isPublic) {
         this.#name = name
@@ -39,6 +41,14 @@ export default class Room {
         return this.#playersReady.length === this.#maxPlayers
     }
 
+    get currentLevel() {
+        return this.#currentLevel
+    }
+
+    get maxLevel() {
+        return this.#maxLevel
+    }
+
     addPlayer(socketId) {
         if (this.#players.length === this.#maxPlayers) return
         this.#players.push(socketId)
@@ -57,9 +67,14 @@ export default class Room {
     setReadyPlayer(socketId) {
         if (!this.#players.some((playerId) => playerId === socketId)) return
         this.#playersReady.push(socketId)
+        this.#maxPlayers = 1
     }
 
     setStarted() {
         this.#isStarted = true
+    }
+
+    updateLevel() {
+        this.#currentLevel++
     }
 }
