@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
+import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 
@@ -36,15 +37,14 @@ const GameComponent = (props) => {
 
       players.forEach((playerId) => {
         if (playerId == socket.id) {
-          let currPlayer = new Player(playerId, game, true, 100, 100)
+          let currPlayer = new Player(playerId, game, assets, true, 100, 100)
           game.addPlayer(currPlayer)
         } else {
-          let newPlayer = new Player(playerId, game, false, 70, 70)
+          let newPlayer = new Player(playerId, game, assets, false, 70, 70)
           game.addPlayer(newPlayer)
         }
       })
       console.log(level)
-
       game.startGame()
       const startGameLoop = () => {
         game.canvasContext.clearRect(0, 0, game.width, game.height)
@@ -61,7 +61,6 @@ const GameComponent = (props) => {
       playerToMove.movePlayer(position)
     })
   }, [])
-
   return (
     <>
       <h1>Room {roomName}</h1>

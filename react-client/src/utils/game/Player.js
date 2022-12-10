@@ -2,7 +2,7 @@ export default class Player {
     #nick
     #socketId
     #gameObject
-    #assets
+    #asset
     #isCurrentPlayer
 
     #keys = {
@@ -14,8 +14,8 @@ export default class Player {
     
     #x = 0
     #y = 0
-    #width = 30
-    #height = 30
+    #width = 190
+    #height = 160
     #speedX = 0
     #speedY = 0
     #maxSpeed = 5
@@ -26,6 +26,7 @@ export default class Player {
         this.#isCurrentPlayer = isCurrentPlayer
         this.#x = x
         this.#y = y
+        this.#asset = assets.player.player1
     }
 
     update(inputKeys) {
@@ -62,9 +63,10 @@ export default class Player {
         }
     }
 
-    render() {
-        let ctx = this.#gameObject.canvasContext
-        ctx.fillRect(this.#x, this.#y, this.#width, this.#height)
+    render(ctx) {
+        let playerImg = new Image(this.#width, this.#height)
+        playerImg.src = this.#asset
+        ctx.drawImage(playerImg, 140, 160, this.#width, this.#height, this.#x, this.#y, this.#width/2, this.#height/2)
     }
 
     movePlayer(position) {
