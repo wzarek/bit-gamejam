@@ -2,6 +2,7 @@ import InputHandler from '../input-handler/InputHandler'
 import AudioHandler from '../../audio/AudioHandler'
 import { assets } from './Assets'
 import Room from './Room'
+import InteractiveObject from "./InteractiveObject";
 
 export default class Game {
     socketObject

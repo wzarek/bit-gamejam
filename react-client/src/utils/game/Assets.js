@@ -13,6 +13,8 @@ import walk2 from '../../media/audio/sfx/walk/walk2.wav'
 import walk3 from '../../media/audio/sfx/walk/walk3.wav'
 
 import room01 from '../../media/rooms/room01.png'
+// import room02 from '../../media/rooms/room02.png'
+// import room03 from '../../media/rooms/room03.png'
 
 export const assets = {
     player: {

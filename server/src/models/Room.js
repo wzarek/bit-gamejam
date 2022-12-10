@@ -4,6 +4,7 @@ export default class Room {
     #maxPlayers = 2
     #players = []
     #playersReady = []
+    #hasFinishedLevel = {}
     #isStarted = false
     #currentLevel = 1
     #maxLevel = 3
@@ -52,12 +53,14 @@ export default class Room {
     addPlayer(socketId) {
         if (this.#players.length === this.#maxPlayers) return
         this.#players.push(socketId)
+        this.#hasFinishedLevel[socketId] = false
     }
 
     removePlayer(socketId) {
         if (!this.#players.some((playerId) => playerId === socketId)) return
 
         this.#players.splice(this.#players.indexOf(socketId), 1)
+        delete this.#hasFinishedLevel[socketId]
     }
 
     isInRoom(socketId) {
@@ -76,5 +79,14 @@ export default class Room {
 
     updateLevel() {
         this.#currentLevel++
+    }
+
+    get allHasFinished() {
+        let finished = []
+        for (const [key, value] of Object.entries(this.#hasFinishedLevel)) {
+            finished.push(value)
+        }
+
+        return finished.every(element => element === true);
     }
 }
