@@ -74,13 +74,13 @@ export default class Game {
 
     #createRoomCanvas() {
         const gameElement = document.getElementById(this.#gameObjectId)
-        let canvasElement = document.createElement('canvas')
-        canvasElement.width = this.#width
-        canvasElement.height = this.#height
-        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
-        canvasElement.id = 'room-canvas'
-        gameElement.appendChild(canvasElement)
-        this.#roomCanvasContext = canvasElement.getContext('2d')
+        let roomCanvasElement = document.createElement('canvas')
+        roomCanvasElement.width = this.#width
+        roomCanvasElement.height = this.#height
+        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
+        roomCanvasElement.id = 'room-canvas'
+        gameElement.appendChild(roomCanvasElement)
+        this.#roomCanvasContext = roomCanvasElement.getContext('2d')
     }
 
     #createPlayerCanvas() {

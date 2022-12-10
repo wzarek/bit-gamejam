@@ -1,12 +1,12 @@
-export const room01 = [
-    ['NWWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NWALL','NEWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['WWALL','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','FLOOR','EWALL'],
-    ['SWWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SWALL','SEWALL']
+export const roomg01 = [
+    ['#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','0','0','0','0','0','0','0','0','0','0','0','0','0','#'],
+    ['#','#','#','#','#','#','#','#','#','#','#','#','#','#','#']
 ]

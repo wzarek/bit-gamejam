@@ -2,16 +2,21 @@ import player1 from '../../media/assets/Player.png'
 import player2 from '../../media/assets/Player2.png'
 import player3 from '../../media/assets/Player3.png'
 
-// import nwall from '../../media/assets/NWALL.png'
-// import newall from '../../media/assets/NEWALL.png'
-// import nwwall from '../../media/assets/NWWALL.png'
-// import swall from '../../media/assets/SWALL.png'
-// import sewall from '../../media/assets/SEWALL.png'
-// import swwall from '../../media/assets/SWWALL.png'
+// import nwall from '../../media/rooms/wn.png'
+// import newall from '../../media/rooms/wne.png'
+// import nwwall from '../../media/rooms/wnw.png'
+// import swall from '../../media/rooms/ws.png'
+// import sewall from '../../media/rooms/wsea.png'
+// import sewallb from '../../media/rooms/wseb.png'
+// import swwall from '../../media/rooms/wswa.png'
+// import wwall from '../../media/rooms/ww.png'
+// import ewall from '../../media/rooms/we.png'
+// import cwall from '../../media/rooms/wc.png'
 
-// import floor from '../../media/assets/FLOOR.png'
+// import floor from '../../media/rooms/f.png'
 
-import { room01 } from '../../media/rooms/room01.js'
+import { roomg01 } from '../../media/rooms/room01.js'
+import room01 from '../../media/rooms/room01.png'
 
 export const assets = {
     player: {
@@ -19,17 +24,11 @@ export const assets = {
         player2: player2,
         player3: player3
     },
-    // wallTypes: {
-    //     NWALL: nwall,
-    //     NEWALL: newall,
-    //     NWWALL: nwwall,
-    //     SWALL: swall,
-    //     SEWALL: sewall,
-    //     SWWALL: swwall
-    // },
-    // FLOOR: floor
+    rooms: {
+        room01: room01
+    }
 }
 
-export const rooms = {
-    room01: room01
+export const roomsGrid = {
+    roomg01: roomg01
 }
