@@ -8,7 +8,7 @@ export default class Game {
     socketObject
     roomName
 
-    objects = []
+    objects = {}
 
     #height
     #width
@@ -64,9 +64,13 @@ export default class Game {
             let information = this.#level.objects[i].split(' ')
             switch (information[2]) {
                 case 'L':
-                    this.objects.push(new InteractiveObject(information[2], `${information[0]} ${information[1]}`))
+                    this.objects[`${information[0]} ${information[1]}`] = new InteractiveObject(information[2], `${information[0]} ${information[1]}`)
+                    break
+                case 'DC':
+                    this.objects[`${information[0]} ${information[1]}`] = new InteractiveObject(information[2], `${information[0]} ${information[1]}`)
                     break
             }
+            console.log(this.objects)
         }
 
         room.render(this.#roomCanvasContext)
@@ -207,6 +211,16 @@ export default class Game {
         return this.#playersList.find((el) => el.socketId === socketId)
     }
 
+    openDoors(coordinates) {
+        coordinates.forEach((coord) => {
+            this.objects[coord].setType('DO')
+            let coords = coord.split(" ")
+            let coordX = coords[1]
+            let coordY = coords[0]
+            this.#level.grid[coordX][coordY] = "DO"
+        })
+    }
+
     get playerCanvasContext() {
         return this.#playerCanvasContext
     }
@@ -221,6 +235,10 @@ export default class Game {
 
     get height() {
         return this.#height
+    }
+
+    get level() {
+        return this.#level
     }
 }
 

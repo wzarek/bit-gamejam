@@ -14,7 +14,8 @@ export default class Player {
         down: 'ArrowDown',
         left: 'ArrowLeft',
         right: 'ArrowRight',
-        space: ' '
+        space: ' ',
+        e: 'e'
     }
     
     #x = 64
@@ -41,7 +42,9 @@ export default class Player {
         'left': false,
         'right': false,
         'up': false,
-        'down': false
+        'down': false,
+        'space': false,
+        'e': false
     }
 
     #level
@@ -115,13 +118,31 @@ export default class Player {
             
             this.#inputTimeout = setTimeout(() => this.#inputTimeout = null, 20)
             this.#inputTimeout = setTimeout(() => this.#inputTimeout = null, 30)
-            document.dispatchEvent(this.#walkEvent);
+            document.dispatchEvent(this.#walkEvent)
+
+            let playerPos = this.getPlayerPosition
+            let matrixObj = this.#gameObject.level.grid[playerPos.y][playerPos.x] 
+            if (matrixObj == 'L' || matrixObj == 'DO' ) {
+                matrixObj == 'L' ? this.#showToolTip('Click "e" to use the lever') : this.#showToolTip('Click "e" to enter the door')
+            }
+        }
+
+        if (inputKeys.includes(this.#keys.e) && !this.#previouslyUsedKeys.e){
+            let playerPos = this.getPlayerPosition
+            if (this.#gameObject.level.grid[playerPos.y][playerPos.x] == 'L' || this.#gameObject.level.grid[playerPos.y][playerPos.x] == 'DO' ) {
+                console.log(`${playerPos.y} ${playerPos.x}`)
+                let obj = this.#gameObject.objects[`${playerPos.x} ${playerPos.y}`]
+                console.log(obj)
+                obj?.interact(this.#gameObject.roomName, this.#gameObject.socketObject, this.#socketId)
+            }
         }
 
         this.#previouslyUsedKeys.up = inputKeys.includes(this.#keys.up)
         this.#previouslyUsedKeys.down = inputKeys.includes(this.#keys.down)
         this.#previouslyUsedKeys.left = inputKeys.includes(this.#keys.left)
         this.#previouslyUsedKeys.right = inputKeys.includes(this.#keys.right)
+        this.#previouslyUsedKeys.space = inputKeys.includes(this.#keys.space)
+        this.#previouslyUsedKeys.e = inputKeys.includes(this.#keys.e)
     }
 
     // #areColliding(row, col) {
@@ -179,6 +200,10 @@ export default class Player {
     movePlayer(position) {
         this.#x = position.x
         this.#y = position.y
+    }
+
+    #showToolTip(tooltip) {
+        this.#gameObject.socketObject.emit('send-tooltip', tooltip)
     }
 
     get isCurrentPlayer() {
