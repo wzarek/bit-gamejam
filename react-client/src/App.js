@@ -1,7 +1,7 @@
 import React from 'react'
 import Game from './components/Game/GameComponent'
 import { Routes, Route } from "react-router-dom"
-import Home from './components/Rooms/Home'
+import Home from './components/Lobby/Home'
 
 const App = () => {
   return (
