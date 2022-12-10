@@ -10,17 +10,6 @@ export default class Room {
         this.#isPublic = isPublic
     }
 
-    addPlayer(socketId) {
-        if (this.#players.length === this.#maxPlayers) return
-        this.#players.push(socketId)
-    }
-
-    removePlayer(socketId) {
-        if (!this.#players.some((playerId) => playerId === socketId)) return
-
-        this.#players.splice(this.#players.indexOf(socketId), 1)
-    }
-
     get name() {
         return this.#name
     }
@@ -39,5 +28,20 @@ export default class Room {
 
     get isStarted() {
         return this.#isStarted
+    }
+
+    addPlayer(socketId) {
+        if (this.#players.length === this.#maxPlayers) return
+        this.#players.push(socketId)
+    }
+
+    removePlayer(socketId) {
+        if (!this.#players.some((playerId) => playerId === socketId)) return
+
+        this.#players.splice(this.#players.indexOf(socketId), 1)
+    }
+
+    isInRoom(socketId) {
+        return this.#players.some((playerId) => playerId === socketId)
     }
 }
