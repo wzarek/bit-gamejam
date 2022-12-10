@@ -1,10 +1,21 @@
 import InputHandler from '../input-handler/InputHandler'
+import AudioHandler from '../../audio/AudioHandler'
+import ambient1 from '../../media/audio/ambient1.mp3'
+import { assets } from './Assets'
+import Room from './Room'
 
 export default class Game {
+    socketObject
+    roomName
+
     #height
     #width
     #maxPlayers = 2
     #gameObjectId = 'game-object'
+
+    #level
+
+    #assets = assets
 
     #inputHandler
 
@@ -12,10 +23,16 @@ export default class Game {
     #playersToReconnect = []
     #gameState = GameState.WaitingForPlayers
 
-    #canvasContext
+    #playerCanvasContext
+    #roomCanvasContext
     #currentPlayer
 
-    constructor(width = 900, height = 400, maxPlayers = 2) {
+    #roomObjects = []
+
+    constructor(socketObj, roomName, level, width = 960, height = 640, maxPlayers = 2) {
+        this.socketObject = socketObj
+        this.roomName = roomName
+        this.#level = level
         this.#height = height
         this.#width = width
         this.#maxPlayers = maxPlayers
@@ -23,36 +40,67 @@ export default class Game {
     }
 
     startGame() {
-        // if (this.#gameState !== GameState.WaitingForPlayers) return
+        if (this.#gameState !== GameState.WaitingForPlayers) return
 
         this.#gameState = GameState.Starting
         // logic of game starting
-        this.#createCanvas()
-        this.#drawPlayers()
+        this.#createRoomCanvas()
+        this.#createPlayerCanvas()
+        this.drawPlayers()
+        this.#startAudio()
+        this.#renderRoom()
         // end of game starting
         this.#gameState = GameState.InProgress
     }
 
-    #createCanvas() {
+    #renderRoom() {
+        let room = new Room('room01')
+        room.render(this.#roomCanvasContext)
+        //this.#roomObjects = room.
+    }
+
+    #startAudio() {
+        let button = document.createElement('button')
+        button.innerHTML = 'Start music'
+        document.body.appendChild(button)
+        let audio = new AudioHandler(ambient1)
+        button.addEventListener('click', () => {   
+            audio.play()
+        })
+        let button2 = document.createElement('button')
+        button2.innerHTML = 'Stop audio'
+        document.body.appendChild(button2)
+        button2.addEventListener('click', () => {
+            audio.stop()
+        })
+    }
+
+    #createRoomCanvas() {
+        const gameElement = document.getElementById(this.#gameObjectId)
+        let roomCanvasElement = document.createElement('canvas')
+        roomCanvasElement.width = this.#width
+        roomCanvasElement.height = this.#height
+        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
+        roomCanvasElement.id = 'room-canvas'
+        gameElement.appendChild(roomCanvasElement)
+        this.#roomCanvasContext = roomCanvasElement.getContext('2d')
+    }
+
+    #createPlayerCanvas() {
         const gameElement = document.getElementById(this.#gameObjectId)
         let canvasElement = document.createElement('canvas')
         canvasElement.width = this.#width
         canvasElement.height = this.#height
-        canvasElement.classList.add('border-2', 'mx-auto')
+        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
+        canvasElement.id = 'player-canvas'
         gameElement.appendChild(canvasElement)
-        this.#canvasContext = canvasElement.getContext('2d')
+        this.#playerCanvasContext = canvasElement.getContext('2d')
     }
 
-    #drawPlayers() {
+    drawPlayers() {
         this.#playersList.forEach((player) => {
-            player.render(this.#canvasContext)
+            player.render(this.#playerCanvasContext)
         })
-    }
-
-    drawCurrentPlayer() {
-        if (!this.#currentPlayer) return
-
-        this.#currentPlayer.render(this.#canvasContext)
     }
 
     updateCurrentPlayer() {
@@ -62,13 +110,13 @@ export default class Game {
     }
 
     #pauseGame() {
-        if (this.#gameState != GameState.InProgress || this.#gameState != GameState.WaitingForReconnection) return
+        if (this.#gameState !== GameState.InProgress || this.#gameState !== GameState.WaitingForReconnection) return
 
         this.#gameState = GameState.Paused
     }
 
     #resumeGame() {
-        if (this.#gameState != GameState.Paused) return
+        if (this.#gameState !== GameState.Paused) return
 
         this.#gameState = GameState.InProgress
     }
@@ -87,7 +135,7 @@ export default class Game {
         }
 
         this.#playersList.push(player)
-        if (this.#playersList.length === this.#maxPlayers) this.startGame()
+        //if (this.#playersList.length === this.#maxPlayers) this.startGame()
     }
 
     reconnectPlayer(player) {
@@ -113,8 +161,18 @@ export default class Game {
         this.#pauseGame()
     }
 
-    get canvasContext() {
-        return this.#canvasContext
+    getPlayer(socketId) {
+        if (!this.#playersList.some((el) => el.socketId === socketId)) return null
+
+        return this.#playersList.find((el) => el.socketId === socketId)
+    }
+
+    get playerCanvasContext() {
+        return this.#playerCanvasContext
+    }
+
+    get roomCanvasContext() {
+        return this.#roomCanvasContext
     }
 
     get width() {
