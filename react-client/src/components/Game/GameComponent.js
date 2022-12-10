@@ -15,6 +15,7 @@ const socket = io(ip, {
 const GameComponent = (props) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [showIntro, setShowIntro] = useState(false)
+  const [showTooltips, setShowTooltips] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const roomName = params.name
@@ -69,7 +70,12 @@ const GameComponent = (props) => {
           requestAnimationFrame(startGameLoop)
         }
         startGameLoop()
-      }, introDuration);
+      }, introDuration)
+
+      setShowTooltips(true)
+      setTimeout(() => {
+        setShowTooltips(false)
+      }, 10000);
     })
 
     socket.on('move-player', ({ socketId, position }) => {
@@ -87,6 +93,7 @@ const GameComponent = (props) => {
             <Intro />
             : <></>
         }
+        <ToolTips visible={showTooltips} />
       </div>
     </>
   )
