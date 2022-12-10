@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import Room from './Room'
 import { io } from 'socket.io-client'
 
-const ip = 'http://156.17.72.7:3000'
+const ip = 'http://172.20.10.7:3000'
 
 const socket = io(ip, {
   withCredentials: false
