@@ -72,7 +72,7 @@ export default class Game {
 
     drawPlayers() {
         this.#playersList.forEach((player) => {
-            player.render()
+            player.render(this.#canvasContext)
         })
     }
 

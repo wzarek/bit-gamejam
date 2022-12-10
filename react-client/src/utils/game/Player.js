@@ -18,7 +18,7 @@ export default class Player {
     #height = 160
     #speedX = 0
     #speedY = 0
-    #maxSpeed = 5
+    #maxSpeed = 3
 
     constructor(socketId, game, assets, isCurrentPlayer = false, x = 0, y = 0) {
         this.#socketId = socketId
