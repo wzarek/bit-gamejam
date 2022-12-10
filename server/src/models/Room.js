@@ -70,7 +70,6 @@ export default class Room {
     setReadyPlayer(socketId) {
         if (!this.#players.some((playerId) => playerId === socketId)) return
         this.#playersReady.push(socketId)
-        this.#maxPlayers = 1
     }
 
     setStarted() {

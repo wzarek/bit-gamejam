@@ -1,6 +1,5 @@
 import InputHandler from '../input-handler/InputHandler'
 import AudioHandler from '../../audio/AudioHandler'
-import ambient1 from '../../media/audio/ambient1.mp3'
 import { assets } from './Assets'
 import Room from './Room'
 import InteractiveObject from "./InteractiveObject";
@@ -61,19 +60,21 @@ export default class Game {
     }
 
     #startAudio() {
-        let button = document.createElement('button')
-        button.innerHTML = 'Start music'
-        document.body.appendChild(button)
-        let audio = new AudioHandler(ambient1)
-        button.addEventListener('click', () => {   
-            audio.play()
-        })
-        let button2 = document.createElement('button')
-        button2.innerHTML = 'Stop audio'
-        document.body.appendChild(button2)
-        button2.addEventListener('click', () => {
-            audio.stop()
-        })
+        let audioHandler = new AudioHandler()
+
+        // let button = document.createElement('button')
+        // button.innerHTML = 'Start music'
+        // document.body.appendChild(button)
+        // let audio = new AudioHandler(ambient1)
+        // button.addEventListener('click', () => {   
+        //     audio.play()
+        // })
+        // let button2 = document.createElement('button')
+        // button2.innerHTML = 'Stop audio'
+        // document.body.appendChild(button2)
+        // button2.addEventListener('click', () => {
+        //     audio.stop()
+        // })
     }
 
     #createRoomCanvas() {
@@ -81,7 +82,7 @@ export default class Game {
         let roomCanvasElement = document.createElement('canvas')
         roomCanvasElement.width = this.#width
         roomCanvasElement.height = this.#height
-        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
+        roomCanvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
         roomCanvasElement.id = 'room-canvas'
         gameElement.appendChild(roomCanvasElement)
         this.#roomCanvasContext = roomCanvasElement.getContext('2d')
@@ -92,7 +93,7 @@ export default class Game {
         let canvasElement = document.createElement('canvas')
         canvasElement.width = this.#width
         canvasElement.height = this.#height
-        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 't-0')
+        canvasElement.classList.add('border-2', 'mx-auto', 'absolute', 'top-0')
         canvasElement.id = 'player-canvas'
         gameElement.appendChild(canvasElement)
         this.#playerCanvasContext = canvasElement.getContext('2d')
@@ -111,13 +112,13 @@ export default class Game {
     }
 
     #pauseGame() {
-        if (this.#gameState != GameState.InProgress || this.#gameState != GameState.WaitingForReconnection) return
+        if (this.#gameState !== GameState.InProgress || this.#gameState !== GameState.WaitingForReconnection) return
 
         this.#gameState = GameState.Paused
     }
 
     #resumeGame() {
-        if (this.#gameState != GameState.Paused) return
+        if (this.#gameState !== GameState.Paused) return
 
         this.#gameState = GameState.InProgress
     }

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
+import Intro from './Intro'
 
 const ip = 'http://172.20.10.7:3000'
 
@@ -12,10 +13,13 @@ const socket = io(ip, {
 })
 
 const GameComponent = (props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [showIntro, setShowIntro] = useState(false)
+  const [showTooltips, setShowTooltips] = useState(false)
   const params = useParams()
   const navigate = useNavigate()
   const roomName = params.name
+  const introDuration = 15000
 
   const prevSocketId = searchParams.get('socketId') ?? ''
 
@@ -36,32 +40,44 @@ const GameComponent = (props) => {
       game = new Game(socket, roomName, level)
       let playersIdCopy = [...players]
 
-      let currentPlayer = playersIdCopy.find((player) => player === socket.id)
-      let otherPlayer = playersIdCopy.find((player) => player !== socket.id)
+      let currentPlayer = playersIdCopy.indexOf(socket.id)
+      let otherPlayer = currentPlayer === 0 ? 1 : 0
 
       let playersIdSorted = []
-      if (otherPlayer) playersIdSorted.push(otherPlayer)
-      if (currentPlayer) playersIdSorted.push(currentPlayer)
+      if (otherPlayer !== -1) playersIdSorted.push(playersIdCopy[otherPlayer])
+      if (currentPlayer !== -1) playersIdSorted.push(playersIdCopy[currentPlayer])
+      console.log(currentPlayer, otherPlayer)
 
-      playersIdSorted.forEach((playerId, idx) => {
-        let respawns = level.respawns[idx].split(" ")
+      playersIdSorted.forEach((playerId) => {
         if (playerId === socket.id) {
+          let respawns = level.respawns[currentPlayer].split(" ")
           let currPlayer = new Player(playerId, game, level, assets, true, respawns[0] * 64, respawns[1] *64)
           game.addPlayer(currPlayer)
         } else {
+          let respawns = level.respawns[otherPlayer].split(" ")
           let newPlayer = new Player(playerId, game, level, assets, false, respawns[0] * 64, respawns[1] * 64)
           game.addPlayer(newPlayer)
         }
       })
 
-      game.startGame()
-      const startGameLoop = () => {
-        game.playerCanvasContext.clearRect(0, 0, game.width, game.height)
-        game.updateCurrentPlayer()
-        game.drawPlayers()
-        requestAnimationFrame(startGameLoop)
-      }
-      startGameLoop()
+      setShowIntro(true)
+
+      setTimeout(() => {
+        setShowIntro(false)
+        game.startGame()
+        const startGameLoop = () => {
+          game.playerCanvasContext.clearRect(0, 0, game.width, game.height)
+          game.updateCurrentPlayer()
+          game.drawPlayers()
+          requestAnimationFrame(startGameLoop)
+        }
+        startGameLoop()
+      }, introDuration)
+
+      setShowTooltips(true)
+      setTimeout(() => {
+        setShowTooltips(false)
+      }, 10000);
     })
 
     socket.on('move-player', ({ socketId, position }) => {
@@ -73,8 +89,12 @@ const GameComponent = (props) => {
   return (
     <>
       <h1>Room {roomName}</h1>
-      <div id='game-object'>
-
+      <div id='game-object' className='relative mx-auto w-[960px]'>
+        {
+          showIntro ?
+            <Intro />
+            : <></>
+        }
       </div>
     </>
   )
