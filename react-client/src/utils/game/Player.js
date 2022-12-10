@@ -14,8 +14,8 @@ export default class Player {
     
     #x = 0
     #y = 0
-    #width = 30
-    #height = 30
+    #width = 48
+    #height = 48
     #speedX = 0
     #speedY = 0
     #maxSpeed = 5
@@ -23,7 +23,7 @@ export default class Player {
     constructor(game, isCurrentPlayer, assets) {
         this.#gameObject = game
         this.#isCurrentPlayer = isCurrentPlayer
-        this.#asset = assets['player'[Math.floor(Math.random()*assets.length())]]
+        this.#asset = assets['player']
     }
 
     update(inputKeys) {
@@ -55,7 +55,10 @@ export default class Player {
     }
 
     render(ctx) {
-        ctx.drawImage(this.asset, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height)
+        console.log(this.#asset)
+        let playerImg = new Image(512, 512)
+        playerImg.src = this.#asset
+        ctx.drawImage(playerImg, 0, 0, 256, 256, this.#x, this.#y, 48, 48)
     }
 
     get isCurrentPlayer() {

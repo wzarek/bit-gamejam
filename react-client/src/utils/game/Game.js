@@ -1,6 +1,6 @@
 import InputHandler from '../input-handler/InputHandler'
 import AudioHandler from '../../audio/AudioHandler'
-import ambient1 from '../media/audio/ambient1.mp3'
+import ambient1 from '../../media/audio/ambient1.mp3'
 import { assets } from './Assets'
 
 export default class Game {
