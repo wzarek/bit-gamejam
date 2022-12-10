@@ -5,11 +5,11 @@ import { assets } from '../../utils/game/Assets'
 import Game from '../../utils/game/Game'
 import Player from '../../utils/game/Player'
 
-// const ip = 'http://156.17.72.7:3000'
+const ip = 'http://156.17.72.7:3000'
 
-// const socket = io(ip, {
-//   withCredentials: false
-// })
+const socket = io(ip, {
+  withCredentials: false
+})
 
 const GameComponent = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
