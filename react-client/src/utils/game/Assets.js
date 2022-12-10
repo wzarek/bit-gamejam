@@ -15,7 +15,6 @@ import player3 from '../../media/assets/Player3.png'
 
 // import floor from '../../media/rooms/f.png'
 
-import { roomg01 } from '../../media/rooms/room01.js'
 import room01 from '../../media/rooms/room01.png'
 
 export const assets = {
@@ -27,8 +26,4 @@ export const assets = {
     rooms: {
         room01: room01
     }
-}
-
-export const roomsGrid = {
-    roomg01: roomg01
 }
